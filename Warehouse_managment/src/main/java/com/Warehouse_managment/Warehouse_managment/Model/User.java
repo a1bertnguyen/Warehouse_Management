@@ -6,15 +6,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
@@ -24,11 +27,19 @@ public class User implements UserDetails {
     private Long id;
     private String email;
     private String password;
+    private String fullName;
     private boolean enabled= false;
     private boolean locked= false;
     private String createdAt;
     private UserRole role;
 
+    public User(String email, String password, String fullName , UserRole role) {
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.createdAt = LocalDate.now().toString();
+        this.role = role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

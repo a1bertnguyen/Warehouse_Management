@@ -1,9 +1,11 @@
 package com.Warehouse_managment.Warehouse_managment.Service;
 
-public interface RegistrationService {
-    public String registerUser(String email, String password);
+import com.Warehouse_managment.Warehouse_managment.Model.RegistrationRequest;
 
-    public String verifyEmail(String email);
+public interface RegistrationService {
+    public String registerUser(RegistrationRequest request);
+
+    public String confirmToken(String email);
 
 
 }

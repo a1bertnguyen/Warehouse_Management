@@ -1,9 +1,12 @@
 import { Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
+import { signUpComponent } from "./signUpComponent";
+import { ads } from "./ads";
+
 @Component({
   selector: 'app-sign-up',
-  imports: [RouterModule],
+  imports: [RouterModule, signUpComponent, ads],
   templateUrl: './html/signUp.html',
-  styleUrls: ['./css/signUp.css']
+  styleUrls: ['./css/signLog.css']
 })
 export class SignUpComponent { }

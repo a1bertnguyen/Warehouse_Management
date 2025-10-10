@@ -1,9 +1,12 @@
 import { Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
+import { logInComponent } from "./logInComponent";
+import { ads } from "./ads";
+
 @Component({
   selector: 'app-log-in',
-  imports: [RouterModule],
+  imports: [RouterModule, logInComponent, ads],
   templateUrl: './html/logIn.html',
-  styleUrls: ['./css/logIn.css']
+  styleUrls: ['./css/signLog.css']
 })
 export class LogInComponent { }

@@ -1,0 +1,27 @@
+.password-container, .password-confirm-container, .email-container {
+      display: flex;
+      flex-direction: column;
+      width: 250px;
+}
+label{
+    height: 2em;
+    font-size: 1.2em;
+    padding-left: 5px;
+    align-content: end;
+    color: #6f9dff;
+}
+.input-wrapper {
+      position: relative;
+      display: block;
+}
+input {
+      width: 100%;
+}
+.reveal-icon {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+}

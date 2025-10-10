@@ -1,6 +1,7 @@
 package com.Warehouse_managment.Warehouse_managment.Controller;
 
 
+import com.Warehouse_managment.Warehouse_managment.Model.ConfirmationToken;
 import com.Warehouse_managment.Warehouse_managment.Model.RegistrationRequest;
 import com.Warehouse_managment.Warehouse_managment.Service.RegistrationService;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 
@@ -49,10 +51,32 @@ public class RegistrationController {
     }
 
     @GetMapping(path = "confirm")
-    public String confirmToken(@RequestParam("token") String token){
-        return registrationService.confirmToken(token);
+    public ResponseEntity<?> confirmToken(@RequestParam("token") String token){
+        try {
+            String result = registrationService.confirmToken(token);
+            
+            return ResponseEntity.ok(Map.of(
+                "status", "confirmed",
+                "message", result,
+                "token", token,
+                "confirmedAt", LocalDateTime.now().toString()
+            ));
+        } catch (IllegalStateException e) {
+            // Token not found, already confirmed, or expired
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                "status", "failed",
+                "error", e.getMessage(),
+                "timestamp", LocalDateTime.now().toString()
+            ));
+        } catch (Exception e) {
+            // Any other unexpected errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "status", "error",
+                "error", "An unexpected error occurred during token confirmation",
+                "details", e.getMessage(),
+                "timestamp", LocalDateTime.now().toString()
+            ));
+        }
     }
     //Path = localhost:8080/api/v1/registration/confirm?token=[your token]
-
-
 }

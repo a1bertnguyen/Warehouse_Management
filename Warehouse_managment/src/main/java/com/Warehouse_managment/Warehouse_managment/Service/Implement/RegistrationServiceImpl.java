@@ -63,7 +63,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         confirmationTokenService.setConfirmedAt(token);
         userService.enableUser(
                 confirmationToken.getUser().getEmail());
-        return "confirmed";
+        return "successfully confirmed email, you can now login";
     }
 
 

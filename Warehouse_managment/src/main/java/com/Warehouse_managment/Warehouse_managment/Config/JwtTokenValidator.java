@@ -1,4 +1,4 @@
-package com.Warehouse_managment.Warehouse_managment.config;
+package com.Warehouse_managment.Warehouse_managment.Config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

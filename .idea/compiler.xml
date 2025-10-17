@@ -12,11 +12,13 @@
         </processorPath>
         <module name="Warehouse_managment" />
         <module name="Warehoue_managment" />
+        <module name="ClothesWareHouse_HSF" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ClothesWareHouse_HSF" options="-parameters" />
       <module name="Warehoue_managment" options="-parameters" />
       <module name="Warehouse_managment" options="-parameters" />
     </option>

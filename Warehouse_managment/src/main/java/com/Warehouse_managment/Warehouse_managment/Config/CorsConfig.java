@@ -1,4 +1,4 @@
-package com.Warehouse_managment.Warehouse_managment.config;
+package com.Warehouse_managment.Warehouse_managment.Config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

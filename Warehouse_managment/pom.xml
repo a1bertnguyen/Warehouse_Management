@@ -55,6 +55,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+
 		<!-- JWT (jjwt) -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>

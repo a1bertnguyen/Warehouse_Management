@@ -1,4 +1,4 @@
-package com.Warehouse_managment.Warehouse_managment.response;
+package com.Warehouse_managment.Warehouse_managment.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

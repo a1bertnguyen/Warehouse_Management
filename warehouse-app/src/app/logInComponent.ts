@@ -1,8 +1,11 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
+import { FormGroup, FormControl, ReactiveFormsModule } from "@angular/forms";
 
 @Component({
     selector: 'login-input',
+    imports:[ReactiveFormsModule],
     template:`
+    <div [formGroup]="logInForm">
     <div class="email-container">
         <label class="email-input">Email</label>
         <input type="email" id="email-input" name="email" formControlName="email" required/>
@@ -24,11 +27,13 @@ import { Component } from "@angular/core";
             />
         </div>
     </div>
+    </div>
     `,
     styleUrls: ['css/signLogComp.css']
 })
 
 export class logInComponent{
+    @Input({required: true}) logInForm!:FormGroup;
     passwordType: string = 'password';
 
   toggleIcon():string {

@@ -1,0 +1,43 @@
+<main>
+    <header>
+        <h1>Category list</h1>
+    </header>
+    <div class="container-box">
+        <span class="add-category" (click)="showAddCategoryForm = true">Add category</span>
+        <div class="modal-background" *ngIf="showAddCategoryForm">
+            <form class="modal" (submit)="addCategory()" [formGroup]="addCategoryForm">
+                <label for="name">Name</label>
+                <input id="name" type="text" placeholder="Name" formControlName="name"/>
+                <div class="control">
+                    <button (click)="showAddCategoryForm = false">Cancel</button>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        <table>
+            <tr class="table-head">
+                <th>ID</th>
+                <th>Name</th>
+                <th></th>
+            </tr>
+            <tr *ngFor="let category of categories">
+                <td>{{category.id}}</td>
+                <td>{{category.name}}</td>
+                <td>
+                    <button class="adjust" (click)="openAdjustCategoryModal(category)">Adjust</button>
+                    <div class="modal-background" *ngIf="showAdjustCategoryForm === category.id">
+                        <form class="modal" (submit)="adjustCategory()" [formGroup]="adjustCategoryForm">
+                            <label for="name">Name</label>
+                            <input id="name" type="text" placeholder="Name" formControlName="name"/>
+                            <div class="control">
+                                <button (click)="showAdjustCategoryForm = null">Cancel</button>
+                                <button type="submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                    <button class="delete" (click)="deleteCategory(category.id)">Delete</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</main>

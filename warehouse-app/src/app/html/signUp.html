@@ -43,9 +43,9 @@
       <div class="error box"></div>
       <div class="error box"></div>
     </div>
-    <form id="form">
+    <form id="form" [formGroup]="signUpForm" (submit)="submitSignUp()">
       <label>Sign up</label>
-      <signup-input></signup-input>
+      <signup-input [signUpForm]="signUpForm"></signup-input>
       <a routerLink="/login" id="login-route">Have an account?</a>
       <button type="submit">Register</button>
     </form>

@@ -46,11 +46,11 @@
       <div class="box"></div>
       <div class="check box"></div>
     </div>
-    <form id="form">
+    <form id="form" [formGroup]="logInForm" (ngSubmit)="submitLogIn()">
       <label>Log in</label>
-      <login-input></login-input>
+      <login-input [logInForm]="logInForm"></login-input>
       <a routerLink="/" id="signup-route">New here?</a>
-      <button type="submit">Let me in</button>
+      <button type="submit">Log in</button>
     </form>
   </section>
 </main>

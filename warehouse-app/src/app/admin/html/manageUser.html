@@ -1,0 +1,58 @@
+<main>
+    <header>
+        <h1>User list</h1>
+        <span>Managing users' information and role</span>
+    </header>
+    <div class="content-box">
+        <span class="add-user" (click)="showAddUserForm = true">Add user</span>
+        <div class="modal-background" *ngIf="showAddUserForm">
+            <form class="modal" (submit)="addUser()" [formGroup]="addUserForm">
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="Email" formControlName="email"/>
+                <label for="role">Role</label>
+                <select id="role" formControlName="role">
+                    <option value="admin">Admin</option>
+                    <option value="warehouse-manager">Warehouse manager</option>
+                </select>
+                <div class="control">
+                    <button (click)="showAddUserForm = false">Cancel</button>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        <table>
+            <tr class="table-head">
+                <th>ID</th>
+                <th>role</th>
+                <th>email</th>
+                <th>Created on</th>
+                <th></th>
+            </tr>
+            <tr *ngFor="let user of users">
+                <td>{{user.id}}</td>
+                <td>{{user.role}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.createdOn}}</td>
+                <td>
+                    <button class="adjust" (click)="openAdjustUserModal(user)">Adjust</button>
+                    <div class="modal-background" *ngIf="showAdjustUserForm === user.id">
+                        <form class="modal" (submit)="adjustUser(user.id)" [formGroup]="adjustUserForm">
+                            <label for="email">Email</label>
+                            <input id="email" type="email" placeholder="Email" formControlName="email"/>
+                            <label for="role">Role</label>
+                            <select id="role" formControlName="role">
+                                <option value="admin">Admin</option>
+                                <option value="warehouse-manager">Warehouse manager</option>
+                            </select>
+                            <div class="control">
+                                <button (click)="showAdjustUserForm = null">Cancel</button>
+                                <button type="submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                    <button class="delete" (click)="deleteUser(user.id)">Delete</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</main>

@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { SUPPLLIER } from "../data";
 import { CommonModule } from "@angular/common";
-import { FormControl, FormGroup, ReactiveFormsModule, Validator, Validators } from "@angular/forms";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 
 @Component({
     selector: 'supplier',

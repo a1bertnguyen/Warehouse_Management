@@ -1,0 +1,54 @@
+main{
+    width: 80vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #0EA5E9;
+}
+main *{
+    margin: 10px;
+    border-radius: 5px;
+}
+
+header{
+    background: linear-gradient(20deg, #0EA5E9, #F3F4F5);
+    display: flex;
+    flex-direction: column;
+    color: #F3F4F5;
+}
+header h1{
+    padding-left: 10px;
+}
+main div{
+    background-color: #F3F4F5;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.detail{
+    color:#1e3b8a;
+    border: solid 1px #1e3b8a;
+}
+.approve{
+    background-color: #1e3b8a;
+    color: white;
+    border: none;
+}
+.reject{
+    background-color: #DC2626;
+    color: white;
+    border: none;
+}
+table {
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid;
+    border-radius: 0 !important;
+    margin: 0 !important;
+}
+.table-head {
+    background-color: #1e3b8a;
+    color: white;
+}

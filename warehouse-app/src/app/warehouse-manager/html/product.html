@@ -1,0 +1,119 @@
+<main>
+    <header>
+        <h1>Product list</h1>
+    </header>
+    <div class="container-box">
+        <span class="add-item" (click)="showAddItemForm = true">Add product</span>
+        <div class="modal-background" *ngIf="showAddItemForm">
+            <form class="modal" (submit)="addItem()" [formGroup]="addItemForm">
+                <table>
+                    <tr>
+                        <td><label for="id">Product id</label></td>
+                        <td><input id="id" type="text" placeholder="Product id" formControlName="id"/></td>
+                        <td><label for="sku">SKU</label></td>
+                        <td><input id="sku" type="text" placeholder="SKU" formControlName="sku"/></td>
+                    </tr>
+                    <tr>
+                        <td><label for="name">Name</label></td>
+                        <td><input id="name" type="text" placeholder="Name" formControlName="name"/></td>
+                        <td><label for="price">Price</label></td>
+                        <td><input id="price" type="number" placeholder="Price" formControlName="price"/></td>
+                    </tr>
+                    <tr>
+                        <td><label for="description">Description</label></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><textarea id="description" placeholder="Description" formControlName="description"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><label for="category">Category</label></td>
+                        <td><input id="category" type="text" placeholder="Category" formControlName="category"/></td>
+                        <td><label for="quantity">Quantity</label></td>
+                        <td><input id="quantity" type="number" placeholder="Quantity" formControlName="quantity"/></td>
+                    </tr>
+                    <tr>
+                        <td><label for="expire-date">Expire date</label></td>
+                        <td><input id="expire-date" type="date" placeholder="Expire date" formControlName="expire_date"/></td>
+                        <td><label for="image">Product image</label></td>
+                        <td>
+                            <input id="image" type="file" (change)="onFileSelected($event, true)" accept="image/*"/>
+                            <input id="image" type="hidden" placeholder="Image URL" formControlName="image" contenteditable="false"/>
+                        </td>
+                    </tr>
+                </table>
+                <div class="control">
+                    <button (click)="showAddItemForm = false">Cancel</button>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+        <section class="listing" *ngFor="let product of products" [ngStyle]="{'background-color': getExpiringSoon(product.expire_date)}">
+            <div style="margin: 5px;">
+            <img style="margin: 0;"
+            class="listing-photo"
+            [src]="product.image_url"
+            alt="Exterior photo of {{ product.name }}"
+            crossorigin
+            /></div>
+            <h2 class="listing-heading">{{ product.name }}</h2>
+            <p class="listing-category">{{ product.category_name }}</p>
+            <p class="listing-price">Price: {{ product.price }}$</p>
+            <p class="listing-expire-date">Expired date: {{ product.expire_date | date:'mediumDate' }}</p>
+            <div style="display: flex; flex-direction: row; padding: 2px;">
+                <button class="adjust" (click)="openAdjustItemModal(product)">Adjust</button>
+                <button class="delete" (click)="deleteItem(product.product_id)">Delete</button>
+            </div>
+<div class="modal-background" *ngIf="showAdjustItemForm === product.product_id">
+    <form class="modal" (submit)="adjustItem()" [formGroup]="adjustItemForm">
+        <table>
+            <tr>
+                <td><label for="id">Product id</label></td>
+                <td><input id="id" type="text" placeholder="Product id" formControlName="id"/></td>
+                <td><label for="sku">SKU</label></td>
+                <td><input id="sku" type="text" placeholder="SKU" formControlName="sku"/></td>
+            </tr>
+            <tr>
+                <td><label for="name">Name</label></td>
+                <td><input id="name" type="text" placeholder="Name" formControlName="name"/></td>
+                <td><label for="price">Price</label></td>
+                <td><input id="price" type="number" placeholder="Price" formControlName="price"/></td>
+            </tr>
+            <tr>
+                <td><label for="description">Description</label></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="4"><textarea id="description" placeholder="Description" formControlName="description"></textarea></td>
+            </tr>
+            <tr>
+                <td><label for="category">Category</label></td>
+                <td><input id="category" type="text" placeholder="Category" formControlName="category"/></td>
+                <td><label for="quantity">Quantity</label></td>
+                <td><input id="quantity" type="number" placeholder="Quantity" formControlName="quantity"/></td>
+            </tr>
+            <tr>
+                <td><label for="expire-date">Expire date</label></td>
+                <td><input id="expire-date" type="date" placeholder="Expire date" formControlName="expire_date"/></td>
+                <td><label for="image">Product image</label></td>
+                <td>
+                    <input id="image" type="file" (change)="onFileSelected($event, false)" accept="image/*"/>
+                    <input id="image" type="text" placeholder="Image URL" formControlName="image" contenteditable="false"/>
+                </td>
+            </tr>
+        </table>
+        <div class="control">
+                <button (click)="showAdjustItemForm = null">Cancel</button>
+                <button type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+    </section>
+        </div>
+    </div>
+</main>

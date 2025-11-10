@@ -1,0 +1,37 @@
+<main>
+    <fieldset>
+        <legend>
+            Transaction details
+        </legend>
+        <table>
+            <tr>
+                <th>ID:</th>
+                <td>{{transaction.transaction_id}}</td>
+                <th>Name:</th>
+                <td>{{transaction.name}}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{transaction.status}}</td>
+                <th>Updated at:</th>
+                <td>{{transaction.update_at}}</td>
+            </tr>
+            <tr>
+                <th>Type:</th>
+                <td>{{transaction.transaction_type}}</td>
+                <th>Note:</th>
+                <td>{{transaction.note}}</td>
+            </tr>
+            <tr>
+                <th>Total products:</th>
+                <td>{{transaction.total_products}}</td>
+                <th>total_price:</th>
+                <td>{{transaction.total_price}}</td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <button class="back" [routerLink]="['/warehouse-manager/transaction', transaction.transaction_type]">
+        Go back
+    </button>
+</main>

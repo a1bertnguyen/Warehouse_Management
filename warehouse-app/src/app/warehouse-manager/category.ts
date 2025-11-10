@@ -12,7 +12,7 @@ import { CATEGORY } from "../data";
 
 export class Category{
     showAddCategoryForm = false;
-    showAdjustCategoryForm: number | null = null;
+    showAdjustCategoryForm: any | null = null;
     categories = CATEGORY;
     
     addCategoryForm = new FormGroup({
@@ -25,7 +25,7 @@ export class Category{
             return;
         }
         this.categories.push({
-            id: Math.floor(Math.random() * 100000),  
+            id: Math.floor(Math.random() * 100000).toString(),  
             name
         })
         this.showAddCategoryForm = false;

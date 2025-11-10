@@ -1,0 +1,29 @@
+<main>
+    <header>
+        <h1>{{transaction_type}} transaction</h1>
+    </header>
+    <div class="container-box">
+        <table>
+            <tr class="table-head">
+                <th>ID</th>
+                <th>Name</th>
+                <th>Update at</th>
+                <th>Status</th>
+                <th>Note</th>
+                <th></th>
+            </tr>
+            <tr *ngFor="let transaction of transactions">
+                <td>{{transaction.transaction_id}}</td>
+                <td>{{transaction.name}}</td>
+                <td>{{transaction.update_at}}</td>
+                <td>{{transaction.status}}</td>
+                <td>{{transaction.note}}</td>
+                <td>
+                    <button class="detail" [routerLink]="['/transaction-detail', transaction.transaction_id]">Details</button>
+                    <button class="approve" (click)="approve(transaction)">Approve</button>
+                    <button class="reject" (click)="reject(transaction)">Reject</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</main>

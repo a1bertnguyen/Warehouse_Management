@@ -1,6 +1,6 @@
 package com.Warehouse_managment.Warehouse_managment.Model;
 
-import com.Warehouse_managment.Warehouse_managment.Enums.UserRole;
+import com.Warehouse_managment.Warehouse_managment.Enum.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -58,10 +58,4 @@ public class User {
                 ", createdAt=" + createdAt +
                 '}';
     }
-
-    public String getName() {
-        return name;
-    }
-
 }
-

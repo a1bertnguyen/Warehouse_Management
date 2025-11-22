@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerServiceImplementation implements UserDetailsService {
@@ -20,19 +21,13 @@ public class CustomerServiceImplementation implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Ở đây username chính là email mà client gửi lên khi login
-        String email = username;
+        Optional<User> user = userRepository.findByEmail(username);
+        if  (user.isEmpty()) {
+            throw new UsernameNotFoundException(username);
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
-
-        // Nếu bạn có roles/permissions thì map ra GrantedAuthority ở đây
+        }
         List<GrantedAuthority> authorities = new ArrayList<>();
+        return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(), authorities);
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                authorities
-        );
     }
 }

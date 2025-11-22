@@ -1,17 +1,18 @@
 package com.Warehouse_managment.Warehouse_managment.Service;
 
-import com.Warehouse_managment.Warehouse_managment.Dtos.UserDTO;
+
 import com.Warehouse_managment.Warehouse_managment.Model.User;
+import com.Warehouse_managment.Warehouse_managment.Response.LoginRequest;
+import com.Warehouse_managment.Warehouse_managment.Response.RegisterRequest;
 import com.Warehouse_managment.Warehouse_managment.Response.Response;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.Warehouse_managment.Warehouse_managment.Response.UserDTO;
 
-import java.util.List;
+public interface UserService {
+    Response registerUser(RegisterRequest registerRequest);
 
-public interface UserService  {
-    public User getUserProfile (String jwt) throws ChangeSetPersister.NotFoundException;
+    Response loginUser(LoginRequest loginRequest);
 
-    public List<User> getAllUsers();
+    Response getAllUsers();
 
     User getCurrentLoggedInUser();
 

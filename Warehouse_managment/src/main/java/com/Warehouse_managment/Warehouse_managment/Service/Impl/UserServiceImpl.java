@@ -7,7 +7,7 @@ import com.Warehouse_managment.Warehouse_managment.Exceptions.InvalidCredentials
 import com.Warehouse_managment.Warehouse_managment.Exceptions.NotFoundException;
 import com.Warehouse_managment.Warehouse_managment.Model.User;
 import com.Warehouse_managment.Warehouse_managment.Repository.UserRepository;
-import com.Warehouse_managment.Warehouse_managment.Response.LoginRequest;
+import com.Warehouse_managment.Warehouse_managment.Request.LoginRequest;
 import com.Warehouse_managment.Warehouse_managment.Response.RegisterRequest;
 import com.Warehouse_managment.Warehouse_managment.Response.Response;
 import com.Warehouse_managment.Warehouse_managment.Response.UserDTO;

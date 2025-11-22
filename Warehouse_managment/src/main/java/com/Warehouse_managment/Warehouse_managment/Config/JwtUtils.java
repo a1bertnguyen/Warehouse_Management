@@ -21,7 +21,7 @@ public class JwtUtils {
     private static final long EXPIRATION_TIME_IN_MILLISEC = 1000L * 60L * 60L * 24L * 30L * 6L; //expires in 6 months in milleces
     private SecretKey key;
 
-    @Value("${secreteJwtString}")
+    @Value("${jwt.secret}")
     private String secreteJwtString;
 
 

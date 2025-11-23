@@ -1,3 +1,4 @@
+/*
 package com.Warehouse_managment.Warehouse_managment.Config;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
@@ -55,3 +56,4 @@ public class ApplicationConfiguration {
         return new BCryptPasswordEncoder();
     }
 }
+*/

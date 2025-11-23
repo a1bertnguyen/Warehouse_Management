@@ -1,3 +1,4 @@
+/*
 package com.Warehouse_managment.Warehouse_managment.Config;
 
 import io.jsonwebtoken.Claims;
@@ -33,7 +34,7 @@ public class JwtProvider {
 
     public static String getEmailFromJwtToken(String jwt) {
         jwt = jwt.substring(7);
-        Claims claims = Jwts.parserBuilder()
+        Claims claims = Jwts.parser()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(jwt)
@@ -52,3 +53,4 @@ public class JwtProvider {
         return String.join(",", auths);
     }
 }
+*/

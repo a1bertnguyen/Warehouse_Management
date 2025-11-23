@@ -1,3 +1,4 @@
+/*
 package com.Warehouse_managment.Warehouse_managment.Config;
 
 import io.jsonwebtoken.Claims;
@@ -32,7 +33,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 
             try {
                 SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
-                Claims claims = Jwts.parserBuilder()
+                Claims claims = Jwts.parser()
                         .setSigningKey(key)
                         .build()
                         .parseClaimsJws(jwt)
@@ -56,3 +57,4 @@ public class JwtTokenValidator extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+*/

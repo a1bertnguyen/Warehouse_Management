@@ -36,9 +36,10 @@ public class JwtUtils {
                 .subject(email)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_IN_MILLISEC))
-                .signWith(key)
+                .signWith(key, io.jsonwebtoken.SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public String getUsernameFromToken(String token) {
         return extractClaims(token, Claims::getSubject);

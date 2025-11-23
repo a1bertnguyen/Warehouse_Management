@@ -1,6 +1,6 @@
 package com.Warehouse_managment.Warehouse_managment.Exceptions;
 
-import com.Warehouse_managment.Warehouse_managment.Response.Response;
+import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

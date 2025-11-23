@@ -1,3 +1,4 @@
+/*
 package com.Warehouse_managment.Warehouse_managment.Config;
 
 import io.jsonwebtoken.Claims;
@@ -52,3 +53,4 @@ public class JwtProvider {
         return String.join(",", auths);
     }
 }
+*/

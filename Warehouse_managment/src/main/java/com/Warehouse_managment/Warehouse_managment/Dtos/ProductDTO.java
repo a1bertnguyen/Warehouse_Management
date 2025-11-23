@@ -1,38 +1,40 @@
-package com.Warehouse_managment.Warehouse_managment.Response;
+package com.Warehouse_managment.Warehouse_managment.Dtos;
 
-import com.Warehouse_managment.Warehouse_managment.Enum.UserRole;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserDTO {
+public class ProductDTO {
 
     private Long id;
 
+    private Long categoryId;
+    private Long productId;
+    private Long supplierId;
+
     private String name;
 
-    private String email;
+    private String sku;
 
-    @JsonIgnore
-    private String password;
+    private BigDecimal price;
 
-    private String phoneNumber;
+    private Integer stockQuantity;
 
-    private UserRole role;
-
-    private List<TransactionDTO> transactions;
+    private String description;
+    private LocalDateTime expiryDate;
+    private String imageUrl;
 
     private LocalDateTime createdAt;
+
 
 }

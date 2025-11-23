@@ -1,7 +1,7 @@
 package com.Warehouse_managment.Warehouse_managment.Exceptions;
 
 
-import com.Warehouse_managment.Warehouse_managment.Response.Response;
+import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

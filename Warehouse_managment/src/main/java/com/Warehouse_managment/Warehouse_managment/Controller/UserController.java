@@ -1,8 +1,8 @@
 package com.Warehouse_managment.Warehouse_managment.Controller;
 
 import com.Warehouse_managment.Warehouse_managment.Model.User;
-import com.Warehouse_managment.Warehouse_managment.Response.Response;
-import com.Warehouse_managment.Warehouse_managment.Response.UserDTO;
+import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
+import com.Warehouse_managment.Warehouse_managment.Dtos.UserDTO;
 import com.Warehouse_managment.Warehouse_managment.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

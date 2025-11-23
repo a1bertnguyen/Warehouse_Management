@@ -1,8 +1,8 @@
 package com.Warehouse_managment.Warehouse_managment.Controller;
 
 import com.Warehouse_managment.Warehouse_managment.Enum.TransactionStatus;
-import com.Warehouse_managment.Warehouse_managment.Response.Response;
-import com.Warehouse_managment.Warehouse_managment.Response.TransactionRequest;
+import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
+import com.Warehouse_managment.Warehouse_managment.Dtos.TransactionRequest;
 import com.Warehouse_managment.Warehouse_managment.Service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

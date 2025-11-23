@@ -2,15 +2,15 @@ package com.Warehouse_managment.Warehouse_managment.Service.Impl;
 
 
 import com.Warehouse_managment.Warehouse_managment.Config.JwtUtils;
+import com.Warehouse_managment.Warehouse_managment.Dtos.LoginRequest;
 import com.Warehouse_managment.Warehouse_managment.Enum.UserRole;
 import com.Warehouse_managment.Warehouse_managment.Exceptions.InvalidCredentialsException;
 import com.Warehouse_managment.Warehouse_managment.Exceptions.NotFoundException;
 import com.Warehouse_managment.Warehouse_managment.Model.User;
 import com.Warehouse_managment.Warehouse_managment.Repository.UserRepository;
-import com.Warehouse_managment.Warehouse_managment.Request.LoginRequest;
-import com.Warehouse_managment.Warehouse_managment.Response.RegisterRequest;
-import com.Warehouse_managment.Warehouse_managment.Response.Response;
-import com.Warehouse_managment.Warehouse_managment.Response.UserDTO;
+import com.Warehouse_managment.Warehouse_managment.Dtos.RegisterRequest;
+import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
+import com.Warehouse_managment.Warehouse_managment.Dtos.UserDTO;
 import com.Warehouse_managment.Warehouse_managment.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

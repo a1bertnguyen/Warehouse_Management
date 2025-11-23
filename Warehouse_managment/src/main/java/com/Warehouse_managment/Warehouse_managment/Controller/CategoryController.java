@@ -1,7 +1,7 @@
 package com.Warehouse_managment.Warehouse_managment.Controller;
 
-import com.Warehouse_managment.Warehouse_managment.Response.CategoryDTO;
-import com.Warehouse_managment.Warehouse_managment.Response.Response;
+import com.Warehouse_managment.Warehouse_managment.Dtos.CategoryDTO;
+import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
 import com.Warehouse_managment.Warehouse_managment.Service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.Warehouse_managment.Warehouse_managment.Response;
+package com.Warehouse_managment.Warehouse_managment.Dtos;
 
 
 import jakarta.validation.constraints.NotBlank;

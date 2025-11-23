@@ -1,8 +1,8 @@
 package com.Warehouse_managment.Warehouse_managment.Service;
 
 
-import com.Warehouse_managment.Warehouse_managment.Response.Response;
-import com.Warehouse_managment.Warehouse_managment.Response.SupplierDTO;
+import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
+import com.Warehouse_managment.Warehouse_managment.Dtos.SupplierDTO;
 
 public interface SupplierService {
 

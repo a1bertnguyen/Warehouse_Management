@@ -1,4 +1,4 @@
-package com.Warehouse_managment.Warehouse_managment.Response;
+package com.Warehouse_managment.Warehouse_managment.Dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

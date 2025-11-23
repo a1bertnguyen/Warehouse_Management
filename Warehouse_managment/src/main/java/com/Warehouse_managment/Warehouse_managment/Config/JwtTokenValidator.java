@@ -1,3 +1,4 @@
+/*
 package com.Warehouse_managment.Warehouse_managment.Config;
 
 import io.jsonwebtoken.Claims;
@@ -56,3 +57,4 @@ public class JwtTokenValidator extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+*/

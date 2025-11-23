@@ -1,8 +1,8 @@
 package com.Warehouse_managment.Warehouse_managment.Controller;
 
-import com.Warehouse_managment.Warehouse_managment.Request.LoginRequest;
-import com.Warehouse_managment.Warehouse_managment.Response.RegisterRequest;
-import com.Warehouse_managment.Warehouse_managment.Response.Response;
+import com.Warehouse_managment.Warehouse_managment.Dtos.LoginRequest;
+import com.Warehouse_managment.Warehouse_managment.Dtos.RegisterRequest;
+import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
 import com.Warehouse_managment.Warehouse_managment.Service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

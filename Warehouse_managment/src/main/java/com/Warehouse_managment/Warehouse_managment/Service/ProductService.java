@@ -1,7 +1,7 @@
 package com.Warehouse_managment.Warehouse_managment.Service;
 
-import com.Warehouse_managment.Warehouse_managment.Response.ProductDTO;
-import com.Warehouse_managment.Warehouse_managment.Response.Response;
+import com.Warehouse_managment.Warehouse_managment.Dtos.ProductDTO;
+import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ProductService {

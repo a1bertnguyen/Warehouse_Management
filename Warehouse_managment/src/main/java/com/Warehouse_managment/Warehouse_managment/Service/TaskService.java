@@ -17,4 +17,8 @@ public interface TaskService {
     Response assignNewRandomTaskToRandomManager();
 
     Response updateTask(TaskDTO taskDTO);
+
+    Response getAllUserTasks(Long userId);
+
+    Response updateTaskStatus(Long taskId, String status);
 }

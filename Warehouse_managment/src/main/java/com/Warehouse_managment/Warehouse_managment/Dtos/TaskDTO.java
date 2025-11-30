@@ -1,6 +1,7 @@
 package com.Warehouse_managment.Warehouse_managment.Dtos;
 
 
+import com.Warehouse_managment.Warehouse_managment.Enum.TaskStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
@@ -18,18 +19,19 @@ import java.time.LocalDateTime;
 public class TaskDTO {
     private Long id;
 
+    private Long userId;
+
+    private Long productId;
+
     @NotBlank(message = "Name is required")
     private String name;
 
     private String description;
 
-    private boolean isDone;
+    private TaskStatus status;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime deadline;
 
-    private UserDTO user;
-
-    private ProductDTO product;
 }

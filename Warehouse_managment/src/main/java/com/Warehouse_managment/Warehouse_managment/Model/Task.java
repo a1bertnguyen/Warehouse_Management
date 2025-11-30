@@ -1,6 +1,7 @@
 package com.Warehouse_managment.Warehouse_managment.Model;
 
 
+import com.Warehouse_managment.Warehouse_managment.Enum.TaskStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,7 @@ public class Task {
 
     private String description;
 
-    private boolean isDone;
+    private TaskStatus status;
 
     private final LocalDateTime createdAt = LocalDateTime.now();
 

@@ -2,6 +2,7 @@ package com.Warehouse_managment.Warehouse_managment.Service;
 
 import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
 import com.Warehouse_managment.Warehouse_managment.Dtos.TaskDTO;
+import com.Warehouse_managment.Warehouse_managment.Enum.TaskStatus;
 
 public interface TaskService {
     Response getAllTasks();
@@ -20,5 +21,5 @@ public interface TaskService {
 
     Response getAllUserTasks(Long userId);
 
-    Response updateTaskStatus(Long taskId, String status);
+    Response updateTaskStatus(Long taskId, TaskStatus status);
 }

@@ -11,7 +11,6 @@ import com.Warehouse_managment.Warehouse_managment.Repository.ProductRepository;
 import com.Warehouse_managment.Warehouse_managment.Repository.TaskRepository;
 import com.Warehouse_managment.Warehouse_managment.Repository.UserRepository;
 import com.Warehouse_managment.Warehouse_managment.Service.TaskService;
-import com.Warehouse_managment.Warehouse_managment.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -91,13 +90,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Response searchTaskByProductName(String input) {
-        List<Product> matchedProducts = productRepository.findByNameContainingOrDescriptionContaining(input,input);
-        if (!matchedProducts.isEmpty()){
-            throw new NotFoundException("No Task Found");
+        List<Task> matchedTasks = taskRepository.findAllByProduct_NameContainingOrProduct_DescriptionContaining(input,input);
+        if (matchedTasks.isEmpty()){
+            throw new NotFoundException("No Task Found for this Product");
         }
 
-        List<TaskDTO> taskDTOList = modelMapper.map(matchedProducts, new TypeToken<List<TaskDTO>>() {}.getType());
-
+        List<TaskDTO> taskDTOList = modelMapper.map(matchedTasks, new TypeToken<List<TaskDTO>>() {}.getType());
         return Response.builder()
                 .status(200)
                 .message("success")
@@ -171,10 +169,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Response updateTaskStatus(Long taskId, String status) {
+    public Response updateTaskStatus(Long taskId, TaskStatus status) {
         Task existingTask = taskRepository.findById(taskId)
                 .orElseThrow(() -> new NotFoundException("Task Not Found"));
-        existingTask.setStatus(TaskStatus.valueOf(status));
+        existingTask.setStatus(status);
         taskRepository.save(existingTask);
        
         return Response.builder()

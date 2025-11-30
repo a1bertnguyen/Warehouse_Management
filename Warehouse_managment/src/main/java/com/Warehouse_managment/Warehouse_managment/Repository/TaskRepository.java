@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByUserId(Long userId);
+
+    List<Task> findAllByProduct_NameContainingOrProduct_DescriptionContaining(String productName, String description);
 }

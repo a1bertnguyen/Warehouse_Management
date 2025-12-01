@@ -1,7 +1,7 @@
 package com.Warehouse_managment.Warehouse_managment.Service;
 
 import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
-import com.Warehouse_managment.Warehouse_managment.Dtos.TaskDTO;
+import com.Warehouse_managment.Warehouse_managment.Dtos.TaskRequest;
 import com.Warehouse_managment.Warehouse_managment.Enum.TaskStatus;
 
 public interface TaskService {
@@ -11,13 +11,13 @@ public interface TaskService {
 
     Response deleteTask(Long id);
 
-    Response saveTask(TaskDTO taskDTO);
+    Response saveTask(TaskRequest taskRequest);
 
     Response searchTaskByProductName(String input);
 
     Response assignNewRandomTaskToRandomManager();
 
-    Response updateTask(TaskDTO taskDTO);
+    Response updateTask(Long id, TaskRequest taskRequest);
 
     Response getAllUserTasks(Long userId);
 

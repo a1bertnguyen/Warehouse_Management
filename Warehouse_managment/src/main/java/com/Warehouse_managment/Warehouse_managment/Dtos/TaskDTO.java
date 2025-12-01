@@ -19,10 +19,6 @@ import java.time.LocalDateTime;
 public class TaskDTO {
     private Long id;
 
-    private Long userId;
-
-    private Long productId;
-
     @NotBlank(message = "Name is required")
     private String name;
 
@@ -33,5 +29,9 @@ public class TaskDTO {
     private LocalDateTime createdAt;
 
     private LocalDateTime deadline;
+
+    private UserDTO user;
+
+    private ProductDTO product;
 
 }

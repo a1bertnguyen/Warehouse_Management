@@ -2,6 +2,7 @@ package com.Warehouse_managment.Warehouse_managment.Service.Impl;
 
 import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
 import com.Warehouse_managment.Warehouse_managment.Dtos.TaskDTO;
+import com.Warehouse_managment.Warehouse_managment.Dtos.TaskRequest;
 import com.Warehouse_managment.Warehouse_managment.Enum.TaskStatus;
 import com.Warehouse_managment.Warehouse_managment.Exceptions.NotFoundException;
 import com.Warehouse_managment.Warehouse_managment.Model.Product;
@@ -69,17 +70,23 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Response saveTask(TaskDTO taskDTO) {
-        Product product = productRepository.findById(taskDTO.getProductId())
+    public Response saveTask(TaskRequest taskRequest) {
+
+        //check if product and user exist and get the object to build the task
+        Product product = productRepository.findById(taskRequest.getProductId())
                 .orElseThrow(() -> new NotFoundException("Product Not Found"));
 
-        User user = userRepository.findById(taskDTO.getUserId())
+        User user = userRepository.findById(taskRequest.getUserId())
                 .orElseThrow(() -> new NotFoundException("User Not Found"));
-
-        Task task = modelMapper.map(taskDTO, Task.class);
-        task.setStatus(TaskStatus.ASSIGNED);
-        task.setProduct(product);
-        task.setUser(user);
+        //build a task object based on the request and save to the database
+        Task task = Task.builder()
+                .name(taskRequest.getName())
+                .description(taskRequest.getDescription())
+                .product(product)
+                .user(user)
+                .deadline(taskRequest.getDeadline())
+                .status(TaskStatus.ASSIGNED)
+                .build();
         taskRepository.save(task);
         return Response.builder()
                 .status(200)
@@ -123,30 +130,30 @@ public class TaskServiceImpl implements TaskService {
 
         return Response.builder()
                 .status(200)
-                .message("New Task Generated Successfully" + newRandomGeneratedTask.toString())
+                .message("New Task Generated Successfully" + newRandomGeneratedTask)
                 .task(modelMapper.map(newRandomGeneratedTask, TaskDTO.class))
                 .build();
 
     }
 
     @Override
-    public Response updateTask(TaskDTO taskDTO) {
-        Task existingTask = taskRepository.findById(taskDTO.getId())
+    public Response updateTask(Long id, TaskRequest taskRequest) {
+        Task existingTask = taskRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Task Not Found"));
-        if (taskDTO.getStatus() != null) existingTask.setStatus(taskDTO.getStatus());
-        if (taskDTO.getName() != null) existingTask.setName(taskDTO.getName());
-        if (taskDTO.getDescription() != null) existingTask.setDescription(taskDTO.getDescription());
-        if (taskDTO.getUserId() != null & taskDTO.getUserId()>0){
-            User user = userRepository.findById(taskDTO.getUserId())
+        if (taskRequest.getStatus() != null) existingTask.setStatus(taskRequest.getStatus());
+        if (taskRequest.getName() != null) existingTask.setName(taskRequest.getName());
+        if (taskRequest.getDescription() != null) existingTask.setDescription(taskRequest.getDescription());
+        if (taskRequest.getUserId() != null && taskRequest.getUserId()>0){
+            User user = userRepository.findById(taskRequest.getUserId())
                     .orElseThrow(() -> new NotFoundException("User Not Found"));
             existingTask.setUser(user);
         }
-        if (taskDTO.getProductId() != null & taskDTO.getProductId()>0){
-            Product product = productRepository.findById(taskDTO.getProductId())
+        if (taskRequest.getProductId() != null && taskRequest.getProductId()>0){
+            Product product = productRepository.findById(taskRequest.getProductId())
                     .orElseThrow(() -> new NotFoundException("Product Not Found"));
             existingTask.setProduct(product);
         }
-        if (taskDTO.getDeadline() != null) existingTask.setDeadline(taskDTO.getDeadline());
+        if (taskRequest.getDeadline() != null) existingTask.setDeadline(taskRequest.getDeadline());
         taskRepository.save(existingTask);
 
         return Response.builder()

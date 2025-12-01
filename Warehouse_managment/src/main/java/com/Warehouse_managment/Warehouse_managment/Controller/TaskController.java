@@ -2,6 +2,7 @@ package com.Warehouse_managment.Warehouse_managment.Controller;
 
 import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
 import com.Warehouse_managment.Warehouse_managment.Dtos.TaskDTO;
+import com.Warehouse_managment.Warehouse_managment.Dtos.TaskRequest;
 import com.Warehouse_managment.Warehouse_managment.Enum.TaskStatus;
 import com.Warehouse_managment.Warehouse_managment.Service.ProductService;
 import com.Warehouse_managment.Warehouse_managment.Service.TaskService;
@@ -38,20 +39,9 @@ public class TaskController {
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> saveTask(
-            @RequestParam("name") String name,
-            @RequestParam(value= "description",required = false) String description,
-            @RequestParam("deadline") LocalDateTime deadline,
-            @RequestParam("userId") Long userId,
-            @RequestParam("productId") Long productId
-    ){
-        TaskDTO taskDTO = new TaskDTO();
-        taskDTO.setName(name);
-        taskDTO.setDescription(description);
-        taskDTO.setDeadline(deadline);
-        taskDTO.setUserId(userId);
-        taskDTO.setProductId(productId);
-        return ResponseEntity.ok(taskService.saveTask(taskDTO));
+    public ResponseEntity<Response> saveTask(@RequestBody TaskRequest taskRequest)
+    {
+        return ResponseEntity.ok(taskService.saveTask(taskRequest));
     }
 
     @GetMapping("/user/{userId}")
@@ -63,26 +53,15 @@ public class TaskController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> updateTask(
             @PathVariable Long id,
-            @RequestParam("name") String name,
-            @RequestParam(value= "description",required = false) String description,
-            @RequestParam("deadline") LocalDateTime deadline,
-            @RequestParam("userId") Long userId,
-            @RequestParam("productId") Long productId
+            @RequestBody TaskRequest taskRequest
     ){
-        TaskDTO taskDTO = new TaskDTO();
-        taskDTO.setName(name);
-        taskDTO.setDescription(description);
-        taskDTO.setDeadline(deadline);
-        taskDTO.setUserId(userId);
-        taskDTO.setProductId(productId);
-        taskDTO.setId(id);
-        return ResponseEntity.ok(taskService.updateTask(taskDTO));
+        return ResponseEntity.ok(taskService.updateTask(id,taskRequest));
     }
 
     @PatchMapping("{id}/status")
     public ResponseEntity<Response> updateTaskStatus(
             @PathVariable Long id,
-            @RequestBody TaskStatus status) {
+            @RequestParam TaskStatus status) {
         return ResponseEntity.ok(taskService.updateTaskStatus(id, status));
     }
 

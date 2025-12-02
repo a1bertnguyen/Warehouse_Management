@@ -43,6 +43,9 @@ public class Response {
     private TransactionDTO transaction;
     private List<TransactionDTO> transactions;
 
+    private TaskDTO task;
+    private List<TaskDTO> tasks;
+
     private final LocalDateTime timestamp = LocalDateTime.now();
 
 

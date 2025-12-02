@@ -30,6 +30,7 @@ public class TaskDTO {
 
     private LocalDateTime deadline;
 
+    @JsonIgnoreProperties({"transactions", "password"})
     private UserDTO user;
 
     private ProductDTO product;

@@ -4,12 +4,15 @@ import com.Warehouse_managment.Warehouse_managment.Dtos.ProductDTO;
 import com.Warehouse_managment.Warehouse_managment.Dtos.Response;
 import com.Warehouse_managment.Warehouse_managment.Service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/products")
@@ -27,7 +30,9 @@ public class ProductController {
             @RequestParam("price") BigDecimal price,
             @RequestParam("stockQuantity") Integer stockQuantity,
             @RequestParam("categoryId") Long categoryId,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime expiryDate,
             @RequestParam(value = "description", required = false) String description
+
     ) {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setName(name);
@@ -35,6 +40,7 @@ public class ProductController {
         productDTO.setPrice(price);
         productDTO.setStockQuantity(stockQuantity);
         productDTO.setCategoryId(categoryId);
+        productDTO.setExpiryDate(expiryDate);
         productDTO.setDescription(description);
 
         return ResponseEntity.ok(productService.saveProduct(productDTO, imageFile));
@@ -87,7 +93,5 @@ public class ProductController {
     public ResponseEntity<Response> searchProduct(@RequestParam String input) {
         return ResponseEntity.ok(productService.searchProduct(input));
     }
-
-
 }
 

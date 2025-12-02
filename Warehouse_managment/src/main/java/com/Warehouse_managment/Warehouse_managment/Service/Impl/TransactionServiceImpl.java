@@ -55,6 +55,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         if (supplierId == null) throw new NameValueRequiredException("Supplier Id is Required");
 
+        // this is just for checking
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product Not Found"));
 

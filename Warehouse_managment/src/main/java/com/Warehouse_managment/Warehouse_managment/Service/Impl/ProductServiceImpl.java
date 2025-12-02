@@ -52,6 +52,7 @@ public class ProductServiceImpl implements ProductService {
                 .stockQuantity(productDTO.getStockQuantity())
                 .description(productDTO.getDescription())
                 .category(category)
+                .expiryDate(productDTO.getExpiryDate())
                 .build();
 
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -130,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Response getAllProducts() {
 
-        List<Product> productList = productRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        List<Product> productList = productRepository.findAll(Sort.by(Sort.Direction.ASC, "expiryDate"));
 
         List<ProductDTO> productDTOList = modelMapper.map(productList, new TypeToken<List<ProductDTO>>() {
         }.getType());
@@ -187,7 +188,6 @@ public class ProductServiceImpl implements ProductService {
                 .products(productDTOList)
                 .build();
     }
-
 
     //this save to the root of your project
     private String saveImage(MultipartFile imageFile) {
@@ -250,4 +250,5 @@ public class ProductServiceImpl implements ProductService {
 
 
     }
+
 }

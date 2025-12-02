@@ -5,9 +5,11 @@ main{
     flex-direction: column;
     background-color: #0EA5E9;
 }
-main *{
+main > *{
     margin: 10px;
     border-radius: 5px;
+}
+main *{
     box-sizing: border-box;
 }
 
@@ -27,7 +29,6 @@ header h1{
     gap: 15px;
 }
 .listing {
-    width: 25%;
     min-width: 200px;
     padding: 20px;
     color: white;
@@ -42,4 +43,19 @@ header h1{
 }
 .content-box{
     background-color: #F3F4F5;
+}
+
+.message {
+  background: #22c55e;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+}
+.err {
+  background: #DC2626;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  margin-top: 0.5rem;
 }

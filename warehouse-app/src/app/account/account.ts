@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule, Router } from "@angular/router";
+import { RouterModule, Router, ActivatedRoute } from "@angular/router";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: 'app-account',
@@ -9,7 +10,10 @@ import { RouterModule, Router } from "@angular/router";
   styleUrl: './account.css'
 })
 export class Account {
+  route: ActivatedRoute = inject(ActivatedRoute);
   passwordType: string = 'password';
+
+  constructor(private http:HttpClient, private router:Router){}
 
   toggleIcon():string {
     return this.passwordType === 'password' ? 'assets/outside/reveal.png' : 'assets/outside/hidden.png';
@@ -18,9 +22,9 @@ export class Account {
     this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
   }
 
-  email="admin@gmai.com"
-  role="admin";
-  currentDate = "2025-02-15"
+  email="example email";
+  role="example role";
+  createdDate = "example date";
 
   passwordForm = new FormGroup({
     password: new FormControl('', Validators.required),
@@ -37,5 +41,10 @@ export class Account {
   })
   async onUpdate(){
 
+  }
+
+  logout() {
+    localStorage.removeItem('authToken');
+    this.router.navigate(['/']);
   }
 }

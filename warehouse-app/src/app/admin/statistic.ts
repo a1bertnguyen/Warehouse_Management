@@ -1,61 +1,118 @@
 import { Component } from "@angular/core";
-import { MOCK_USERS, TRANSACTIONS, PRODUCTS } from "../data";
 import { StatChartComponent } from "./stat-chart";
+
+import { userService } from "../service/userService";
+import { productService } from "../service/productService";
+import { categoryService } from "../service/categoryService";
+import { supplierService } from "../service/supplierService";
+import { taskService } from "../service/taskService";
+import { transactionService } from "../service/transactionService";
+
+import { CommonModule } from "@angular/common";
 
 @Component({
     templateUrl: './html/statistic.html',
-    imports: [StatChartComponent],
+    imports: [StatChartComponent, CommonModule],
     styleUrls: ['./css/statistic.css']
 })
 
 export class Statistic {
-    users = MOCK_USERS;
-    transactions = TRANSACTIONS;
-    products = PRODUCTS;
+    users:any[] = [];
+    transactions:any[] = [];
+    products:any[] = [];
+    categories:any[] = [];
+    suppliers:any[] = [];
+    tasks:any[] = [];
+
+    message = "";
+    error = "";
     
+    constructor(private userService:userService,
+                private transactionService:transactionService,
+                private productService:productService,
+                private categoryService:categoryService,
+                private taskService:taskService,
+                private supplierService:supplierService
+    ) {}
+
+    ngOnInit() {
+        this.loadUsers();
+        this.loadSuppliers();
+        this.loadTransactions();
+        this.loadTasks();
+        this.loadCategories();
+        this.loadProducts();
+    }
+
+    loadUsers(){
+        this.userService.getAllUser().subscribe({
+            next: model => this.users = model,
+            error: () => this.error = "Failed to load users"
+        });
+    }
+    loadSuppliers(){
+        this.supplierService.getAllSuppliers().subscribe({
+            next: model => this.suppliers = model,
+            error: () => this.error = "Failed to load suppliers"
+        });
+    }
+    loadTransactions(){
+        this.transactionService.getAllTran().subscribe({
+            next: model => this.transactions = model,
+            error: () => this.error = "Failed to load transaction"
+        });
+    }
+    loadTasks(){
+        this.taskService.getAllAdminTask().subscribe({
+            next: model => this.tasks = model,
+            error: () => this.error = "Failed to load tasks"
+        });
+    }
+    loadCategories(){
+        this.categoryService.getAllCat().subscribe({
+            next: model => this.categories = model,
+            error: () => this.error = "Failed to load categorys"
+        });
+    }
+    loadProducts(){
+        this.productService.getAllProducts().subscribe({
+            next: model => this.products = model,
+            error: () => this.error = "Failed to load products"
+        });
+    }
+
     getUserNumber(){
-        let total = 0;
-        this.users.map(u => total++);
-        return total;
+        return this.users.length;
+    }
+
+    getSupplierNumber(){
+        return this.users.length;
     }
 
     getSellingOrder(){
-        const selling = this.transactions.filter(t => t.transaction_type === "Selling");
-        let total = 0;
-        selling.map(s => total++);
-        return total;
+        const selling = this.transactions.filter(t => t.transaction_type = "SALE");
+        return selling.length;
     }
 
-    getSupplyingOrder(){
-        const supplying = this.transactions.filter(t => t.transaction_type === "Supplying");
-        let total = 0;
-        supplying.map(s => total++);
-        return total;
+    getPurchasingOrder(){
+        const purchasing = this.transactions.filter(t => t.transaction_type = "PURCHASE");
+        return purchasing.length;
     }
 
-    getInventory(){
-        let total = 0;
-        this.products.map(p => total += p.stock_quantity);
-        return total;
+    getTaskNumber(){
+        return this.tasks.length;
+    }
+
+    getCategoryNumber(){
+        return this.categories.length;
     }
 
     getProductNumber(){
-        let total = 0;
-        this.products.map(p => total++);
-        return total;
-    }
-
-    getFewStock(){
-        let total = 0;
-        const fewStock = this.products.filter(p => p.stock_quantity <= 15);
-        fewStock.map(f => total++);
-        return total;
+        return this.products.length;
     }
 
     getOutStock(){
-        let total = 0;
         const outStock = this.products.filter(p => p.stock_quantity <= 0);
-        outStock.map(f => total++);
-        return total;
+        return outStock.length;
     }
 }

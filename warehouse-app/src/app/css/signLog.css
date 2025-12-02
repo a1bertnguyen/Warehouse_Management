@@ -76,3 +76,40 @@ a{
   width: 60%;
   height: 100%;
 }
+
+/* Error message */
+.err {
+    background-color: rgba(220, 38, 38, 0.9); /* semi-transparent red */
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.95em;
+    margin: 0.5rem 0;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Optional hover/animation effect */
+.err:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Success / info message */
+.message {
+    background-color: rgba(22, 163, 74, 0.9); /* semi-transparent green */
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.95em;
+    margin: 0.5rem 0;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.message:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}

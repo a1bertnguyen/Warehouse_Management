@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { inject } from '@angular/core';
 import { SignUpComponent } from './signUp';
 import { LogInComponent } from './logIn';
 
@@ -7,6 +8,7 @@ import { manageUser } from './admin/manageUser';
 import { Statistic } from './admin/statistic';
 
 import { Account } from './account/account';
+import { AuthGuard } from './guard/AuthGuard';
 
 import { WarehouseManager } from './warehouse-manager/warehouse-manager';
 import { Category } from './warehouse-manager/category';
@@ -19,17 +21,24 @@ import { Inventory } from './warehouse-manager/inventory';
 const routeConfig: Routes = [
   {
     path: '',
+    component: LogInComponent,
+    title: 'Log in page'
+  },
+  {
+    path: 'sign-up',
     component: SignUpComponent,
     title: 'Sign up page'
   },
   {
-    path: 'login',
+    path: 'login/:message',
     component: LogInComponent,
     title: 'Log in page'
   },
   {
     path: 'admin',
     component: Admin,
+    canActivate: [() => inject(AuthGuard).canActivate()],
+    canActivateChild: [() => inject(AuthGuard).canActivate()],
     title: 'admin',
     children: [{
       path: '',
@@ -51,6 +60,8 @@ const routeConfig: Routes = [
   {
     path:'warehouse-manager',
     component: WarehouseManager,
+    canActivate: [() => inject(AuthGuard).canActivate()],
+    canActivateChild: [() => inject(AuthGuard).canActivate()],
     title:'Warehouse-manager',
     children:[{
       path: '',
@@ -83,7 +94,9 @@ const routeConfig: Routes = [
   },
   {
     path: 'transaction-detail/:id',
-    component: transactionDetail
+    component: transactionDetail,
+    canActivate: [() => inject(AuthGuard).canActivate()],
+    canActivateChild: [() => inject(AuthGuard).canActivate()],
   }
 ];
 export default routeConfig;

@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MOCK_USERS } from "../data";
 import { FormControl, FormGroup,ReactiveFormsModule, Validators } from "@angular/forms";
+import { userService } from "../service/userService";
 
 @Component({
     selector:'manage-user',
@@ -11,61 +12,77 @@ import { FormControl, FormGroup,ReactiveFormsModule, Validators } from "@angular
 })
 
 export class manageUser{
-    users = MOCK_USERS;
-    showAddUserForm = false;
-    showAdjustUserForm: number | null = null;
+    users: any[] = [];
 
-    addUserForm = new FormGroup({
-        email: new FormControl('', Validators.required),
-        role: new FormControl('', Validators.required)
-    })
+    message = "";
+    error = "";
 
-    async addUser(){
-        const email = this.addUserForm.value.email ?? '';
-        const role = this.addUserForm.value.role ?? '';
+    showEditUserForm = false;
+    selectedUser: any = null;
 
-        if(!email || !role){
-            alert("Please fill in every fields");
-            return;
-        }
-        this.users.push({
-            id: Math.floor(Math.random() * 100000),  
-            role, email,
-            createdOn: new Date().toISOString().split('T')[0]
-        })
+    constructor(private userService: userService) {}
+
+    ngOnInit() {
+        this.loadUsers();
     }
 
-    async deleteUser(id: any){
-        this.users = this.users.filter(user => user.id !== id);
-    }
+    editUserForm = new FormGroup({
+        name: new FormControl('', Validators.required),
+        phone: new FormControl('', Validators.required)
+    });
 
-    selectedUserId: any;
-    adjustUserForm = new FormGroup({
-        email: new FormControl('', Validators.required),
-        role: new FormControl('', Validators.required)
-    })
-    openAdjustUserModal(user: any) {
-        this.showAdjustUserForm = user.id;
-        this.selectedUserId = user.id;
-        this.adjustUserForm.setValue({
-            email: user.email,
-            role: user.role
+    private loadUsers() {
+        this.userService.getAllUser().subscribe({
+            next: users => this.users = users,
+            error: () => this.error = "Failed to load users"
         });
     }
-    async adjustUser(id: any){
-        const email = this.adjustUserForm.value.email ?? '';
-        const role = this.adjustUserForm.value.role ?? '';
 
-        if(!email || !role){
-            alert("Please fill in every fields");
+    openEditUserModal(user: any) {
+        this.selectedUser = user;
+        this.showEditUserForm = true;
+
+        this.editUserForm.patchValue({
+            name: user.name,
+            phone: user.phoneNumber,
+        });
+    }
+
+    closeModal() {
+        this.showEditUserForm = false;
+        this.selectedUser = null;
+    }
+
+    editUser(id: number) {
+        if (this.editUserForm.invalid) {
+            this.error = "All fields are required";
             return;
         }
-        
-        const user = this.users.find(u => u.id === this.selectedUserId);
-        if (user){
-            user.email=email;
-            user.role=role;
-        }
-        this.showAdjustUserForm=null;
+
+        const updated = {
+            name: this.editUserForm.value.name,
+            phoneNumber: this.editUserForm.value.phone,
+        };
+
+        this.userService.updateUser(id, updated).subscribe({
+            next: () => {
+                this.message = "User updated successfully";
+
+                this.loadUsers();
+
+                this.closeModal();
+            },
+            error: () => this.error = "Failed to update user"
+        });
+    }
+
+    deleteUser(id: number) {
+        this.userService.deleteUser(id).subscribe({
+        next: () => {
+            this.users = this.users.filter(u => u.id !== id);
+            this.message = "User deleted successfully";
+        },
+        error: () => this.error = "Failed to delete user"
+        });
     }
 }

@@ -48,8 +48,10 @@
     </div>
     <form id="form" [formGroup]="logInForm" (ngSubmit)="submitLogIn()">
       <label>Log in</label>
+      <p class="message" *ngIf="message">{{message}}</p>
+      <p class="err" *ngIf="error">{{error}}</p>
       <login-input [logInForm]="logInForm"></login-input>
-      <a routerLink="/" id="signup-route">New here?</a>
+      <a routerLink="/sign-up" id="signup-route">New here?</a>
       <button type="submit">Log in</button>
     </form>
   </section>

@@ -45,8 +45,9 @@
     </div>
     <form id="form" [formGroup]="signUpForm" (submit)="submitSignUp()">
       <label>Sign up</label>
+      <p class="err" *ngIf="error">{{error}}</p>
       <signup-input [signUpForm]="signUpForm"></signup-input>
-      <a routerLink="/login" id="login-route">Have an account?</a>
+      <a routerLink='/' id="login-route">Have an account?</a>
       <button type="submit">Register</button>
     </form>
   </section>

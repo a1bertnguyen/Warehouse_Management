@@ -1,6 +1,6 @@
 main{
     width: 80vw;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     background-color: #0EA5E9;
@@ -69,4 +69,19 @@ form label{
 button{
     width: 20%;
     align-self: center;
+}
+
+.message {
+  background: #22c55e;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  margin: 10px;
+}
+.err {
+  background: #DC2626;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  margin: 10px;
 }

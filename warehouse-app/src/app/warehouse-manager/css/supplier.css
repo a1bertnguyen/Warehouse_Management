@@ -1,11 +1,11 @@
 main{
     width: 80vw;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     background-color: #0EA5E9;
 }
-main *{
+main > *{
     margin: 10px;
     border-radius: 5px;
 }
@@ -19,12 +19,32 @@ header{
 header h1{
     padding-left: 10px;
 }
-main div{
+
+.content-box {
     background-color: #F3F4F5;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    padding: 5px;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #d1d5db;
+    padding: 8px 10px;
+}
+.table-head {
+    background-color: #1e3b8a;
+    color: white;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
 .add-item{
     background-color: #1e3b8a;
     width: 10%;
@@ -32,50 +52,103 @@ main div{
     padding: 5px;
     text-align: center;
     align-self: flex-end;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
 }
-.adjust{
-    background-color: #1e3b8a;
-    color: white;
-    border: none;
+.edit {
+  background-color: #1e3b8a;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
 }
-.delete{
-    background-color: #DC2626;
-    color: white;
-    border: none;
-}
-table {
-    border-collapse: collapse;
-}
-th, td {
-    border: 1px solid;
-    border-radius: 0 !important;
-    margin: 0 !important;
-}
-.table-head {
-    background-color: #1e3b8a;
-    color: white;
+.delete {
+  background-color: #DC2626;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .modal-background {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0,0,0,0.35) !important;
+  background-color: rgba(0,0,0,0.35);
   z-index: 1000;
-  display: flex; 
+  display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .modal {
   background: #fff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 0 10px #0001;
-  display: flex; 
+  padding: 2rem;
+  width: 350px;
+  border-radius: 10px;
+  display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 0.75rem;
 }
-.control {
-    background-color: #fff !important;
-    display: flex;
-    flex-direction: row !important;
+
+.modal label {
+  font-weight: 600;
+  color: #1e3b8a;
+}
+.modal input {
+  padding: 8px 10px;
+  border: 1px solid #CBD5E1;
+  border-radius: 5px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.modal input:focus {
+  border-color: #1e3b8a;
+  box-shadow: 0 0 0 2px rgba(30, 59, 138, 0.2);
+}
+
+.readonly-field {
+  background: #E2E8F0;
+  padding: 10px;
+  border: 1px solid #CBD5E1;
+  border-radius: 5px;
+  font-size: 0.95rem;
+  color: #374151;
+  pointer-events: none;
+}
+
+.modal-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.btn-cancel {
+  padding: 6px 14px;
+}
+.btn-save {
+  background-color: #1e3b8a;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.message {
+  background: #22c55e;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  margin: 0.5rem 0;
+}
+.err {
+  background: #DC2626;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  margin: 0.5rem 0;
 }

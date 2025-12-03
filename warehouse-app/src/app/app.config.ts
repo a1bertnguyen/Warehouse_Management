@@ -7,7 +7,6 @@ import routeConfig from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(),
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptors([authInterceptorFn])),

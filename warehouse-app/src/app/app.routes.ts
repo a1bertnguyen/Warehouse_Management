@@ -55,6 +55,22 @@ const routeConfig: Routes = [
     {
       path: 'statistic',
       component: Statistic
+    },
+    {
+      path: 'category',
+      component: Category
+    },
+    {
+      path: 'supplier',
+      component: Supplier
+    },
+    {
+      path: 'transaction/:type',
+      component: Transaction
+    },
+    {
+      path: 'product',
+      component: Product
     }]
   },
   {

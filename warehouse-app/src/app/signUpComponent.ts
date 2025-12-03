@@ -38,6 +38,9 @@ import { CommonModule } from '@angular/common';
            *ngIf="signUpForm.get('password')?.hasError('required') && signUpForm.get('password')?.touched">
            Password is required
         </p>
+        <p class="error" *ngIf="signUpForm.get('password')?.hasError('invalidCharacter')">
+            Password cannot contain ":"
+        </p>
     </div>
 
     <div class="password-confirm container">

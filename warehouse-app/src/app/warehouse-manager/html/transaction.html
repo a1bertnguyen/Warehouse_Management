@@ -1,29 +1,178 @@
 <main>
-    <header>
-        <h1>{{transaction_type}} transaction</h1>
-    </header>
-    <div class="container-box">
-        <table>
-            <tr class="table-head">
-                <th>ID</th>
-                <th>Name</th>
-                <th>Update at</th>
-                <th>Status</th>
-                <th>Note</th>
-                <th></th>
-            </tr>
-            <tr *ngFor="let transaction of transactions">
-                <td>{{transaction.transaction_id}}</td>
-                <td>{{transaction.name}}</td>
-                <td>{{transaction.update_at}}</td>
-                <td>{{transaction.status}}</td>
-                <td>{{transaction.note}}</td>
-                <td>
-                    <button class="detail" [routerLink]="['/transaction-detail', transaction.transaction_id]">Details</button>
-                    <button class="approve" (click)="approve(transaction)">Approve</button>
-                    <button class="reject" (click)="reject(transaction)">Reject</button>
-                </td>
-            </tr>
-        </table>
+  <header>
+    <h1>{{ transaction_type }} transaction</h1>
+  </header>
+  <div class="content-box">
+
+    <div *ngIf="message" class="message">{{ message }}</div>
+    <div *ngIf="error" class="err">{{ error }}</div>
+
+    <div class="toolbar">
+      <form class="search-form" [formGroup]="searchForm" (ngSubmit)="onSearchSubmit()">
+        <label>Month:
+          <input type="number" formControlName="month" min="1" max="12" />
+        </label>
+        <label>Year:
+          <input type="number" formControlName="year" min="2000" />
+        </label>
+        <button type="submit" class="btn-search">Search</button>
+      </form>
+
+      <div class="toolbar-actions">
+        <button
+          *ngIf="transaction_type === 'Purchasing'"
+          class="add-item"
+          (click)="openPurchaseForm()"
+        >
+          Add purchasing
+        </button>
+        <button
+          *ngIf="transaction_type === 'Selling'"
+          class="add-item"
+          (click)="openSellForm()"
+        >
+          Add selling
+        </button>
+      </div>
     </div>
+
+    <table>
+      <thead class="table-head">
+        <tr>
+          <th>ID</th>
+          <th>Total products</th>
+          <th>Total price</th>
+          <th>Status</th>
+          <th>Created at</th>
+          <th>Note</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of transactions">
+          <td>{{ t.id }}</td>
+          <td>{{ t.totalProducts }}</td>
+          <td>{{ t.totalPrice | number: '1.0-2' }}</td>
+          <td>{{ t.status }}</td>
+          <td>{{ t.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+          <td>{{ t.note }}</td>
+          <td>
+            <div class="actions">
+              <button
+                class="detail"
+                [routerLink]="['/transaction-detail', t.id]"
+              >
+                Details
+              </button>
+
+              <ng-container *ngIf="role === 'ADMIN' && t.status === 'PENDING'">
+                <button
+                  class="approve"
+                  (click)="updateStatus(t.id, 'PROCESSING')"
+                >
+                  Approve
+                </button>
+                <button
+                  class="reject"
+                  (click)="returnTran(); updateStatus(t.id, 'CANCELLED')"
+                >
+                  Reject
+                </button>
+              </ng-container>
+
+              <ng-container *ngIf="role === 'MANAGER' && t.status === 'PROCESSING'">
+                <button
+                  class="approve"
+                  (click)="updateStatus(t.id, 'COMPLETED')"
+                >
+                  Complete
+                </button>
+              </ng-container>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal-background" *ngIf="showPurchaseForm">
+    <form class="modal" [formGroup]="purchaseForm" (ngSubmit)="addPurchase()">
+      <h2>Add purchasing transaction</h2>
+
+      <label for="pProduct">Product ID *</label>
+      <input id="pProduct" type="number" formControlName="productId" />
+
+      <label for="pSupplier">Supplier ID *</label>
+      <input id="pSupplier" type="number" formControlName="supplierId" />
+
+      <label for="pQuantity">Quantity *</label>
+      <input id="pQuantity" type="number" formControlName="quantity" />
+
+      <label for="pDesc">Description</label>
+      <input id="pDesc" type="text" formControlName="description" />
+
+      <label for="pNote">Note</label>
+      <input id="pNote" type="text" formControlName="note" />
+
+      <div class="modal-controls">
+        <button type="button" class="btn-cancel" (click)="closePurchaseForm()">
+          Cancel
+        </button>
+        <button type="submit" class="btn-save">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-background" *ngIf="showSellForm">
+    <form class="modal" [formGroup]="sellForm" (ngSubmit)="addSell()">
+      <h2>Add selling transaction</h2>
+
+      <label for="sProduct">Product ID *</label>
+      <input id="sProduct" type="number" formControlName="productId" />
+
+      <label for="sQuantity">Quantity *</label>
+      <input id="sQuantity" type="number" formControlName="quantity" />
+
+      <label for="sDesc">Description</label>
+      <input id="sDesc" type="text" formControlName="description" />
+
+      <label for="sNote">Note</label>
+      <input id="sNote" type="text" formControlName="note" />
+
+      <div class="modal-controls">
+        <button type="button" class="btn-cancel" (click)="closeSellForm()">
+          Cancel
+        </button>
+        <button type="submit" class="btn-save">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-background" *ngIf="showReturnForm">
+    <form class="modal" [formGroup]="returnForm" (ngSubmit)="returnTran()">
+      <h2>Return transaction</h2>
+
+      <label for="rProduct">Product ID *</label>
+      <input id="rProduct" type="number" formControlName="productId" />
+
+      <label for="rSupplier">Supplier ID *</label>
+      <input id="rSupplier" type="number" formControlName="supplierId" />
+
+      <label for="rQuantity">Quantity *</label>
+      <input id="rQuantity" type="number" formControlName="quantity" />
+
+      <label for="rDesc">Description</label>
+      <input id="rDesc" type="text" formControlName="description" />
+
+      <label for="rNote">Note</label>
+      <input id="rNote" type="text" formControlName="note" />
+
+      <div class="modal-controls">
+        <button type="button" class="btn-cancel" (click)="closeReturnForm()">
+          Cancel
+        </button>
+        <button type="submit" class="btn-save">Save</button>
+      </div>
+    </form>
+  </div>
 </main>

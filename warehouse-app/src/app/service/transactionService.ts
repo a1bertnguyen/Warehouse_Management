@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 export class transactionService {
 
   private readonly allURL = "http://127.0.0.1:8081/api/transactions/all";
-  private readonly IdURL = "http://127.0.0.1:8081/api/transactions/";
+  private readonly idURL = "http://127.0.0.1:8081/api/transactions/";
   private readonly updateURL = "http://127.0.0.1:8081/api//transactions/return";
   private readonly purchaseURL = "http://127.0.0.1:8081/api/transactions/purchase";
   private readonly sellURL = "http://localhost:8081/api/transactions/sell";
@@ -24,12 +24,12 @@ export class transactionService {
   }
 
   getTranById(id:number): Observable<any[]>{
-    return this.http.get<any>(this.IdURL + id).pipe(
+    return this.http.get<any>(this.idURL + id).pipe(
         map(res => res.transaction)
     );
   }
 
-  updateTran(data:any){
+  returnTran(data:any){
     return this.http.post(this.updateURL, data);
   }
 
@@ -45,5 +45,13 @@ export class transactionService {
     return this.http.get<any>(this.searchURL + "month=" + month + "&year=" + year).pipe(
         map(res => res.transactions)
     );
+  }
+
+  updateStatusTran(id:number, status:string){
+    return this.http.put(
+    this.idURL + id,
+    `"${status}"`,
+    { headers: { 'Content-Type': 'application/json' } }
+  );
   }
 }

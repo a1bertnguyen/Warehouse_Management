@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { RouterModule, Router } from "@angular/router";
 import { signUpComponent } from "./signUpComponent";
 import { ads } from "./ads";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
 import { CommonModule } from "@angular/common";
 
@@ -17,10 +17,14 @@ export class SignUpComponent {
 
   constructor(private http:HttpClient, private router: Router){}
 
+  noColonValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value || "";
+    return value.includes(":") ? { invalidCharacter: true } : null;
+  }
   signUpForm = new FormGroup({
     name: new FormControl('', Validators.required),
     email: new FormControl('', Validators.email),
-    password: new FormControl('', Validators.required),
+    password: new FormControl('', [Validators.required, this.noColonValidator]),
     passwordConfirm: new FormControl('', Validators.required),
     phone: new FormControl('', Validators.required),
     role: new FormControl('ADMIN', Validators.required)

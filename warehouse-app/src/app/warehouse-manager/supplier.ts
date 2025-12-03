@@ -1,71 +1,152 @@
 import { Component } from "@angular/core";
-import { SUPPLLIER } from "../data";
 import { CommonModule } from "@angular/common";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { supplierService } from "../service/supplierService";
 
 @Component({
-    selector: 'supplier',
-    imports:[ReactiveFormsModule, CommonModule],
-    templateUrl: './html/supplier.html',
-    styleUrls:['./css/supplier.css']
+  selector: "supplier",
+  imports: [ReactiveFormsModule, CommonModule],
+  templateUrl: "./html/supplier.html",
+  styleUrls: ["./css/supplier.css"],
 })
+export class Supplier {
+  suppliers:any[] = [];
 
-export class Supplier{
-    showAddItemForm = false;
-    showAdjustItemForm: number | null = null;
-    suppliers = SUPPLLIER;
+  role = localStorage.getItem('role');
+  message = "";
+  error = "";
 
-    addItemForm = new FormGroup({
-        name: new FormControl('', Validators.required),
-        contact: new FormControl('', Validators.required)
+  showAddItemForm = false;
+  showEditSupplierForm = false;
+  selectedSupplier: any = null;
+
+  constructor(private supplierService:supplierService){}
+
+  ngOnInit() {
+        this.loadSuppliers();
+    }
+
+  loadSuppliers(){
+    this.supplierService.getAllSuppliers().subscribe({
+        next: model => {
+        this.suppliers = model
+      },
+      error: () => {
+        this.error = "",
+        setTimeout(() => {
+          this.error = "Failed to load suppliers"
+        }, 500)
+      }
     })
-    async addItem(){
-        const name = this.addItemForm.value.name ?? '';
-        const contact = this.addItemForm.value.contact ?? '';
+  }
 
-        if(!name || !contact){
-            alert('Please fill in every fields');
-            return;
+  addItemForm = new FormGroup({
+    name: new FormControl("", Validators.required),
+    contactInfo: new FormControl("", Validators.required),
+    address: new FormControl("", Validators.required),
+  });
+
+  editSupplierForm = new FormGroup({
+    name: new FormControl("", Validators.required),
+    contactInfo: new FormControl("", Validators.required),
+    address: new FormControl("", Validators.required),
+  });
+
+  openAddItemForm() {
+    this.message = "";
+    this.error = "";
+    this.addItemForm.reset();
+    this.showAddItemForm = true;
+  }
+
+  closeAddItemForm() {
+    this.showAddItemForm = false;
+  }
+
+  addItem() {
+    this.message = "";
+    this.error = "";
+
+    if (this.addItemForm.invalid) {
+      this.error = "All fields are required";
+      return;
+    }
+
+    const name = this.addItemForm.value.name ?? "";
+    const contactInfo = this.addItemForm.value.contactInfo ?? "";
+    const address = this.addItemForm.value.address ?? "";
+
+    const supplier ={
+      name,
+      contactInfo,
+      address,
+    };
+
+    this.supplierService.addSupplier(supplier).subscribe({
+        next: () =>{
+            setTimeout(() => {this.message = "Supplier added successfully"}, 500);
+            this.loadSuppliers();
+        },
+        error: (err) =>{
+            setTimeout(() => {this.error = err.error?.message}, 500);
         }
-
-        this.suppliers.push({
-            id: Math.floor(Math.random() * 100000),  
-            name, contact
-        })
-        this.showAddItemForm = false;
-    }
-
-    async deleteItem(id:any){
-        this.suppliers = this.suppliers.filter(u => u.id !== id);
-    }
-
-    seletedItemId: any;
-    adjustItemForm = new FormGroup({
-        name: new FormControl('', Validators.required),
-        contact: new FormControl('', Validators.required)
     })
-    openAdjustItemModal(item: any){
-        this.showAdjustItemForm = item.id;
-        this.seletedItemId = item.id;
-        this.adjustItemForm.setValue({
-            name: item.name,
-            contact: item.contact
-        })
-    }
-    async adjustItem(){
-        const name = this.adjustItemForm.value.name ?? '';
-        const contact = this.adjustItemForm.value.contact ?? '';
 
-        if(!name || !contact){
-            alert('please fill in every fields');
-            return;
-        }
+    this.closeAddItemForm();
+  }
 
-        const supplier = this.suppliers.find(u => u.id ===this.seletedItemId);
-        if(supplier){
-            supplier.name = name;
-            supplier.contact = contact;
+  deleteItem(id: any) {
+    this.supplierService.deleteSupplier(id).subscribe({
+        next: () =>{
+            setTimeout(() => {this.message = "Supplier deleted successfully"}, 500);
+            this.loadSuppliers();
+        },
+        error: (err) =>{
+            setTimeout(() => {this.error = err.error?.message}, 500);
         }
-        this.showAdjustItemForm = null;
+    })
+  }
+
+  openEditSupplierModal(supplier: any) {
+    this.message = "";
+    this.error = "";
+    this.selectedSupplier = supplier;
+    this.showEditSupplierForm = true;
+
+    this.editSupplierForm.patchValue({
+      name: supplier.name,
+      contactInfo: supplier.contactInfo,
+      address: supplier.address,
+    });
+  }
+
+  closeEditModal() {
+    this.showEditSupplierForm = false;
+    this.selectedSupplier = null;
+  }
+
+  editSupplier(id: number) {
+    if (this.editSupplierForm.invalid) {
+      this.error = "All fields are required";
+      return;
     }
+
+    const supplier = {
+        name:this.editSupplierForm.value.name,
+        contactInfo:this.editSupplierForm.value.contactInfo,
+        address:this.editSupplierForm.value.address
+    }
+
+    this.supplierService.addSupplier(id).subscribe({
+        next: () =>{
+            setTimeout(() => {this.message = "Supplier added successfully"}, 500);
+            this.loadSuppliers();
+        },
+        error: (err) =>{
+            setTimeout(() => {this.error = err.error?.message}, 500);
+        }
+    })
+
+    this.closeEditModal();
+  }
 }

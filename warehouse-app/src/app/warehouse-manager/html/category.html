@@ -1,43 +1,52 @@
 <main>
-    <header>
-        <h1>Category list</h1>
-    </header>
-    <div class="container-box">
-        <span class="add-category" (click)="showAddCategoryForm = true">Add category</span>
-        <div class="modal-background" *ngIf="showAddCategoryForm">
-            <form class="modal" (submit)="addCategory()" [formGroup]="addCategoryForm">
-                <label for="name">Name</label>
-                <input id="name" type="text" placeholder="Name" formControlName="name"/>
-                <div class="control">
-                    <button (click)="showAddCategoryForm = false">Cancel</button>
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
+  <header>
+    <h1>Category Management</h1>
+  </header>
+
+  <div class="content-box">
+    <div *ngIf="message" class="message">{{ message }}</div>
+    <div *ngIf="error" class="err">{{ error }}</div>
+
+    <button *ngIf="role === 'ADMIN'" class="add-item" (click)="openAddCategoryForm()">Add category</button>
+
+    <div class="pill-container">
+      <div class="pill" *ngFor="let c of categories">
+        <span class="pill-name">{{ c.name }}</span>
+
+        <div class="actions" *ngIf="role === 'ADMIN'">
+          <button class="edit" (click)="openEditCategoryModal(c)">Edit</button>
+          <button class="delete" (click)="deleteCategory(c.id)">Delete</button>
         </div>
-        <table>
-            <tr class="table-head">
-                <th>ID</th>
-                <th>Name</th>
-                <th></th>
-            </tr>
-            <tr *ngFor="let category of categories">
-                <td>{{category.id}}</td>
-                <td>{{category.name}}</td>
-                <td>
-                    <button class="adjust" (click)="openAdjustCategoryModal(category)">Adjust</button>
-                    <div class="modal-background" *ngIf="showAdjustCategoryForm === category.id">
-                        <form class="modal" (submit)="adjustCategory()" [formGroup]="adjustCategoryForm">
-                            <label for="name">Name</label>
-                            <input id="name" type="text" placeholder="Name" formControlName="name"/>
-                            <div class="control">
-                                <button (click)="showAdjustCategoryForm = null">Cancel</button>
-                                <button type="submit">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                    <button class="delete" (click)="deleteCategory(category.id)">Delete</button>
-                </td>
-            </tr>
-        </table>
+      </div>
     </div>
+  </div>
+
+  <div class="modal-background" *ngIf="showAddCategoryForm">
+    <form class="modal" [formGroup]="addCategoryForm" (ngSubmit)="addCategory()">
+      <h2>Add category</h2>
+
+      <label for="name">Name</label>
+      <input id="name" type="text" formControlName="name" />
+
+      <div class="modal-controls">
+        <button type="button" class="btn-cancel" (click)="closeAddCategoryForm()">Cancel</button>
+        <button type="submit" class="btn-save">Add</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-background" *ngIf="showEditCategoryForm">
+    <form class="modal" [formGroup]="editCategoryForm" (ngSubmit)="editCategory(selectedCategory.id)">
+      <h2>Edit category</h2>
+
+      <label for="editName">Name</label>
+      <input id="editName" type="text" formControlName="name" />
+
+      <div class="modal-controls">
+        <button type="button" class="btn-cancel" (click)="closeEditModal()">Cancel</button>
+        <button type="submit" class="btn-save">Save</button>
+      </div>
+    </form>
+  </div>
+
 </main>

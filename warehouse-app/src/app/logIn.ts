@@ -36,6 +36,7 @@ export class LogInComponent {
 
     const logInData = {email, password};
     let accessToken: string | undefined;
+    let userId: number | undefined;
     let role: string | undefined;
 
     this.http.post('http://127.0.0.1:8081/api/auth/login', logInData)
@@ -43,12 +44,16 @@ export class LogInComponent {
       next: (response:any) => {
         accessToken = response.token;
         localStorage.setItem('authToken', accessToken ?? '');
-        role = response.role === "ADMIN" ? "admin" : "warehouse-manager";
-        this.router.navigate([role]);
+
+        userId = Number(response.userId);
+        localStorage.setItem('userId', userId?.toString());
+
+        role = response.role;
+        localStorage.setItem('role', role ?? '');
+        this.router.navigate([role === "ADMIN" ? "admin" : "warehouse-manager"]);
         },
       error: (err) => {
         this.error = err.error?.message 
-                || err.message 
                 || "Login failed";
       }
     });

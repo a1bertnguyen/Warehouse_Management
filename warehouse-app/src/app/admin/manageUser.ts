@@ -67,20 +67,18 @@ export class manageUser{
         this.userService.updateUser(id, updated).subscribe({
             next: () => {
                 this.message = "User updated successfully";
-
                 this.loadUsers();
-
-                this.closeModal();
             },
             error: () => this.error = "Failed to update user"
         });
+        this.closeModal();
     }
 
     deleteUser(id: number) {
         this.userService.deleteUser(id).subscribe({
         next: () => {
-            this.users = this.users.filter(u => u.id !== id);
-            this.message = "User deleted successfully";
+            this.message = "User deleted successfully",
+            this.loadUsers()
         },
         error: () => this.error = "Failed to delete user"
         });

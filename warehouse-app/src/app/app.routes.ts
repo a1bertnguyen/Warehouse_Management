@@ -9,6 +9,8 @@ import { Statistic } from './admin/statistic';
 
 import { Account } from './account/account';
 import { AuthGuard } from './guard/AuthGuard';
+import { AdminGuard } from './guard/AdminGuard';
+import { ManagerGuard } from './guard/ManagerGuard';
 
 import { WarehouseManager } from './warehouse-manager/warehouse-manager';
 import { Category } from './warehouse-manager/category';
@@ -37,8 +39,8 @@ const routeConfig: Routes = [
   {
     path: 'admin',
     component: Admin,
-    canActivate: [() => inject(AuthGuard).canActivate()],
-    canActivateChild: [() => inject(AuthGuard).canActivate()],
+    canActivate: [() => inject(AdminGuard).canActivate()],
+    canActivateChild: [() => inject(AdminGuard).canActivate()],
     title: 'admin',
     children: [{
       path: '',
@@ -76,8 +78,8 @@ const routeConfig: Routes = [
   {
     path:'warehouse-manager',
     component: WarehouseManager,
-    canActivate: [() => inject(AuthGuard).canActivate()],
-    canActivateChild: [() => inject(AuthGuard).canActivate()],
+    canActivate: [() => inject(ManagerGuard).canActivate()],
+    canActivateChild: [() => inject(ManagerGuard).canActivate()],
     title:'Warehouse-manager',
     children:[{
       path: '',

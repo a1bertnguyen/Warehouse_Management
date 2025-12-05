@@ -30,7 +30,7 @@ import { CommonModule } from '@angular/common';
     <div class="password container">
     <label>Password</label>
         <div class="input-wrapper">
-            <input [type]="passwordType" id="password-input" formControlName="password"/>
+            <input [type]="passwordType" id="password-input" formControlName="password" autocomplete="off"/>
             <img [src]="toggleIcon()" (click)="togglePasswordVisibility()" class="reveal-icon" />
         </div>
 
@@ -45,7 +45,7 @@ import { CommonModule } from '@angular/common';
 
     <div class="password-confirm container">
         <label>Password confirm</label>
-        <input [type]="passwordType" id="password-confirm-input" formControlName="passwordConfirm"/>
+        <input [type]="passwordType" id="password-confirm-input" formControlName="passwordConfirm" autocomplete="off"/>
 
         <p class="error"
            *ngIf="signUpForm.get('passwordConfirm')?.hasError('required') && signUpForm.get('passwordConfirm')?.touched">

@@ -17,7 +17,7 @@ import { FormGroup, FormControl, ReactiveFormsModule } from "@angular/forms";
                 [type]="passwordType"
                 id="password-input" name="password"
                 formControlName="password"
-                required
+                required autocomplete="off"
             />
             <img
                 [src]="toggleIcon()"

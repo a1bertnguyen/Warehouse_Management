@@ -2,7 +2,10 @@ import { Component, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule, ActivatedRoute } from "@angular/router";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+
 import { transactionService } from "../service/transactionService";
+import { supplierService } from "../service/supplierService";
+import { productService } from "../service/productService";
 
 @Component({
   selector: "transaction",
@@ -13,13 +16,19 @@ import { transactionService } from "../service/transactionService";
 export class Transaction {
   route: ActivatedRoute = inject(ActivatedRoute);
 
-  constructor(private tranService: transactionService) {}
+  constructor(private tranService: transactionService,
+              private supplierService: supplierService,
+              private productService: productService
+  ) {}
 
   role = localStorage.getItem("role");
   transaction_type: string | null = null;
   backendType: "SALE" | "PURCHASE" | null = null;
+  selectedTranId:number | null = null;
 
   transactions: any[] = [];
+  products: any[] = [];
+  suppliers: any[] = [];
 
   message = "";
   error = "";
@@ -65,6 +74,8 @@ export class Transaction {
 
       this.loadTransactions();
     });
+  this.loadProducts();
+  this.loadSuppliers();
   }
 
   loadTransactions() {
@@ -84,6 +95,21 @@ export class Transaction {
           this.error = "Failed to load transactions";
         }, 500);
       },
+    });
+  }
+
+
+  loadProducts() {
+    this.productService.getAllProducts().subscribe({
+      next: (p) => this.products = p,
+      error: () => this.error = "Failed to load products"
+    });
+  }
+
+  loadSuppliers() {
+    this.supplierService.getAllSuppliers().subscribe({
+      next: (s) => this.suppliers = s,
+      error: () => this.error = "Failed to load suppliers"
     });
   }
 
@@ -120,9 +146,10 @@ export class Transaction {
     this.showSellForm = true;
   }
 
-  openReturnForm() {
+  openReturnForm(id:number) {
     this.message = "";
     this.error = "";
+    this.selectedTranId = id;
     this.returnForm.reset();
     this.showReturnForm = true;
   }
@@ -137,6 +164,7 @@ export class Transaction {
 
   closeReturnForm() {
     this.showReturnForm = false;
+    this.selectedTranId = null;
   }
 
   addPurchase() {
@@ -206,7 +234,7 @@ export class Transaction {
     this.closeSellForm();
   }
 
-  returnTran() {
+  returnTran(id:number | null) {
     this.message = "";
     this.error = "";
 
@@ -228,6 +256,7 @@ export class Transaction {
         setTimeout(() => {
           this.message = "Return transaction created successfully";
         }, 500);
+        if (id) this.updateStatus(id, 'CANCELLED');
         this.loadTransactions();
       },
       error: (err) => {
@@ -260,7 +289,6 @@ export class Transaction {
   search(month: number, year: number) {
     this.message = "";
     this.error = "";
-        console.log(this.backendType);
 
     this.tranService.searchTran(month, year).subscribe({
       next: (list) => {

@@ -10,7 +10,7 @@ export class productService {
 
   private readonly allURL = "http://127.0.0.1:8081/api/products/all";
   private readonly IdURL = "http://127.0.0.1:8081/api/products/";
-  private readonly updateURL = "http://127.0.0.1:8081/api/products/update/";
+  private readonly updateURL = "http://127.0.0.1:8081/api/products/update";
   private readonly deleteURL = "http://127.0.0.1:8081/api/products/delete/";
   private readonly addURL = "http://localhost:8081/api/products/add";
   private readonly searchURL = "http://localhost:8081/api/products/search?input=";
@@ -29,8 +29,8 @@ export class productService {
     );
   }
 
-  updateProduct(id:number, data:any){
-    return this.http.put(this.updateURL + id, data);
+  updateProduct(data:any){
+    return this.http.put(this.updateURL, data);
   }
 
   deleteProduct(id:number){

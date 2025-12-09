@@ -1,171 +1,237 @@
-import { Component } from "@angular/core";
+import { Component} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { CATEGORY, PRODUCTS } from "../data";
+import { debounceTime, distinctUntilChanged } from "rxjs";
+
+import { productService } from "../service/productService";
+import { categoryService } from "../service/categoryService";
 
 @Component({
-    imports:[ReactiveFormsModule, CommonModule],
-    templateUrl: './html/product.html',
-    styleUrls:['./css/product.css']
+  selector: "product",
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: "./html/product.html",
+  styleUrls: ["./css/product.css"],
 })
+export class Product {
 
-export class Product{
-    showAddItemForm = false;
-    showAdjustItemForm: any | null = null;
-    products = this.sortProductsByExpiry(PRODUCTS);
-    selectedFile?: File | null = null;
+  products: any[] = [];
+  categories: any[] = [];
 
-    addItemForm = new FormGroup({
-        id: new FormControl('', Validators.required),
-        sku: new FormControl('', Validators.required),
-        name: new FormControl('', Validators.required),
-        price: new FormControl('', Validators.required),
-        description: new FormControl('', Validators.required),
-        category: new FormControl('', Validators.required),
-        quantity: new FormControl('', Validators.required),
-        expire_date: new FormControl('', Validators.required),
-        image: new FormControl('', Validators.required)
+  message = "";
+  error = "";
+  role = localStorage.getItem("role");
+
+  showAddForm = false;
+  showEditForm = false;
+
+  selectedProduct: any = null;
+  selectedFile?: File | null = null;
+  previewImage: string | null = null;
+
+  constructor(private productService:productService,
+            private categoryService:categoryService
+  ) {}
+
+  ngOnInit() {
+    this.loadProducts();
+    this.loadCategories();
+  }
+
+  loadProducts() {
+    this.productService.getAllProducts().subscribe({
+      next: (p) => {
+        this.products = p;
+        this.filteredProducts = this.products.sort((a: any, b: any) => {
+            return new Date(a.expiryDate).getTime() - new Date(b.expiryDate).getTime();
+        });
+      },
+      error: () => (this.error = "Failed to load products"),
+    });
+  }
+
+  loadCategories() {
+    this.categoryService.getAllCat().subscribe({
+      next: (c) => (this.categories = c),
+      error: () => (this.error = "Failed to load categories"),
+    });
+  }
+
+  filteredProducts: any[] = [];
+
+  searchControl = new FormControl("");
+
+  searchForm = new FormGroup({
+    keyword: this.searchControl
+  });
+
+  onSearch() {
+    const keyword = this.searchControl.value?.trim() || "";
+
+    if (keyword === "") {
+      this.filteredProducts = this.products;
+      return;
+    }
+
+    this.searchBackend(keyword);
+  }
+
+  searchBackend(keyword: string) {
+    this.productService.searchProduct(keyword).subscribe({
+      next: (res) => {
+        this.filteredProducts = res;
+      },
+      error: () => {
+        this.error = "Search failed";
+        this.filteredProducts = this.products;
+      }
+    });
+  }
+
+  addForm = new FormGroup({
+    name: new FormControl("", Validators.required),
+    sku: new FormControl("", Validators.required),
+    price: new FormControl<number | null>(null, Validators.required),
+    stockQuantity: new FormControl<number | null>(null, Validators.required),
+    categoryId: new FormControl<number | null>(null, Validators.required),
+    expiryDate: new FormControl("", Validators.required),
+    description: new FormControl(""),
+  });
+
+  openAddForm() {
+    this.showAddForm = true;
+    this.previewImage = null;
+    this.selectedFile = null;
+    this.addForm.reset();
+  }
+
+  closeAddForm() {
+    this.showAddForm = false;
+  }
+
+  onFileSelected(event: Event, add: boolean) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+
+      const reader = new FileReader();
+      reader.onload = () => (this.previewImage = reader.result as string);
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
+  addProduct() {
+    if (this.addForm.invalid || !this.selectedFile) {
+      this.error = "All fields and image are required";
+      return;
+    }
+
+    const formData = new FormData();
+
+    Object.entries(this.addForm.value).forEach(([key, value]) => {
+      if (value !== null && key !== "expiryDate") {
+        formData.append(key, value.toString());
+      }
+    });
+  
+    const exp = this.addForm.value.expiryDate + "T00:00:00";
+    formData.append("expiryDate", exp);
+
+    formData.append("imageFile", this.selectedFile);
+  
+    this.productService.addProduct(formData).subscribe({
+      next: () => {
+        this.message = "Product created successfully";
+        this.loadProducts();
+        this.closeAddForm();
+      },
+      error: () => (this.error = "Failed to add product"),
+    });
+  }
+
+  editForm = new FormGroup({
+    productId: new FormControl ("", Validators.required),
+    name: new FormControl("", Validators.required),
+    sku: new FormControl("", Validators.required),
+    price: new FormControl<number | null>(null, Validators.required),
+    stockQuantity: new FormControl<number | null>(null, Validators.required),
+    categoryId: new FormControl<number | null>(null, Validators.required),
+    expiryDate: new FormControl("", Validators.required),
+    description: new FormControl(""),
+  });
+
+  openEditForm(p: any) {
+    this.selectedProduct = p;
+    this.previewImage = null;
+    this.selectedFile = null;
+
+    this.editForm.patchValue({
+      productId: p.productId,
+      name: p.name,
+      sku: p.sku,
+      price: p.price,
+      stockQuantity: p.stockQuantity,
+      categoryId: p.categoryId,
+      expiryDate: p.expiryDate.split("T")[0],
+      description: p.description,
     });
 
-    onFileSelected(event: Event, add: boolean) {
-        const input = event.target as HTMLInputElement;
-        if (input.files && input.files.length > 0) {
-        const file = input.files[0];
-        this.selectedFile = file;
-        if (add) this.addItemForm.patchValue({ image: file.name });
-        else this,this.adjustItemForm.patchValue({ image: file.name });
+    this.showEditForm = true;
+  }
+
+  closeEditForm() {
+    this.showEditForm = false;
+    this.selectedProduct = null;
+    this.previewImage = null;
+    this.selectedFile = null;
+  }
+
+  updateProduct(id: number) {
+    if (this.editForm.invalid  || !this.selectedFile) {
+      this.error = "All required fields must be filled";
+      return;
+    }
+
+    const formData = new FormData();
+
+    Object.entries(this.editForm.value).forEach(([key, value]) => {
+        if (value !== null && key !== "expiryDate") {
+          formData.append(key, value.toString());
         }
-    }
+      });
+  
+      const exp = this.addForm.value.expiryDate + "T00:00:00";
+      formData.append("expiryDate", exp);
 
-    async addItem() {
-        const form = this.addItemForm.value;
+      formData.append("imageFile", this.selectedFile);
 
-        const id = form.id?.trim() ?? '';
-        const sku = form.sku?.trim() ?? '';
-        const name = form.name?.trim() ?? '';
-        const price = Number(form.price) || 0;
-        const description = form.description?.trim() ?? '';
-        const categoryInput = form.category?.trim() ?? '';
-        const quantity = Number(form.quantity) || 0;
-        const expire_date = new Date(form.expire_date ?? new Date());
+    this.productService.updateProduct(formData).subscribe({
+      next: () => {
+        this.message = "Product updated!";
+        this.loadProducts();
+        this.closeEditForm();
+      },
+      error: () => (this.error = "Failed to update product"),
+    });
+  }
 
-        if (this.addItemForm.invalid || !this.selectedFile) {
-            alert("Please fill all fields and select an image");
-            return;
-        }
+  deleteProduct(id: number) {
+    this.productService.deleteProduct(id).subscribe({
+      next: () => {
+        this.message = "Deleted successfully";
+        this.loadProducts();
+      },
+      error: () => (this.error = "Failed to delete product"),
+    });
+  }
 
-        const matchedCategory = CATEGORY.find(c => c.id === categoryInput || c.name.toLowerCase() === categoryInput.toLowerCase());
+  getExpiringSoon(date: string) {
+    const today = new Date();
+    const expire = new Date(date);
+    const diff = (expire.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
 
-        if (!matchedCategory) {
-            alert('Cannot find category');
-            return;
-        }
-
-        const image_url = URL.createObjectURL(this.selectedFile);
-
-        this.products.push({
-            product_id: id,
-            name: name,
-            description: description,
-            sku: sku,
-            price: price,
-            stock_quantity: quantity,
-            expire_date: expire_date,
-            created_at: new Date(),
-            image_url,
-            category_id: matchedCategory.id,
-            category_name: matchedCategory.name
-        })
-        this.products = this.sortProductsByExpiry(this.products);
-        this.showAddItemForm = false;
-        this.selectedFile = undefined;
-    }
-
-    async deleteItem(id:any){
-        this.products = this.products.filter(u => u.product_id !== id);
-    }
-
-    selectedItemId: any;
-    adjustItemForm = new FormGroup({
-        id: new FormControl('', Validators.required),
-        sku: new FormControl('', Validators.required),
-        name: new FormControl('', Validators.required),
-        price: new FormControl('', Validators.required),
-        description: new FormControl('', Validators.required),
-        category: new FormControl('', Validators.required),
-        quantity: new FormControl('', Validators.required),
-        expire_date: new FormControl('', Validators.required),
-        image: new FormControl('', Validators.required)
-    })
-    openAdjustItemModal(item: any){
-        this.showAdjustItemForm = item.product_id;
-        this.selectedItemId = item.product_id;
-        this.adjustItemForm.setValue({
-            id: item.product_id,
-            sku: item.sku,
-            name: item.name,
-            price: item.price.toString(),
-            description: item.description,
-            category: item.category_name,
-            quantity: item.stock_quantity.toString(),
-            expire_date: item.expire_date.toISOString().split('T')[0],
-            image: item.image_url.split('/').pop() ?? 'existing image'
-        })
-    }
-    async adjustItem(){
-        const form = this.adjustItemForm.value;
-
-        if (this.adjustItemForm.invalid) {
-            alert("Please fill all fields");
-            return;
-        }
-
-        const matchedCategory = CATEGORY.find(c => c.id === form.category || c.name.toLowerCase() === (form.category ?? '').toLowerCase());
-
-        if (!matchedCategory) {
-            alert('Cannot find category');
-            return;
-        }
-
-        const product = this.products.find(u => u.product_id ===this.selectedItemId);
-        if(product){
-            let image_url = product.image_url;
-            if (this.selectedFile)
-            image_url = URL.createObjectURL(this.selectedFile);
-
-            product.product_id = form.id ?? product.product_id;
-            product.sku = form.sku ?? product.sku;
-            product.name = form.name ?? product.name;
-            product.price = Number(form.price) || product.price;
-            product.description = form.description ?? product.description;
-            product.category_id = matchedCategory.id;
-            product.category_name = matchedCategory.name;
-            product.stock_quantity = Number(form.quantity) || product.stock_quantity;
-            product.expire_date = new Date(form.expire_date ?? product.expire_date);
-            product.image_url = image_url;
-        }
-        this.products = this.sortProductsByExpiry(this.products);
-        this.showAdjustItemForm = null;
-        this.selectedItemId = null;
-        this.adjustItemForm.reset();
-        this.selectedFile = undefined;
-    }
-
-    getExpiringSoon(date: Date): string {
-        const today = new Date();
-        const expire = new Date(date);
-        const diffDays = (expire.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
-        if (diffDays <= 0) return "#b91c1c"
-        if (diffDays <= 7) return "#dc9326ff"
-        if (diffDays <= 15) return "#f4f461ff"
-        return "#F3F4F5"
-    }
-
-    sortProductsByExpiry(products: any[]) {
-        return products.sort((a, b) => {
-            const dateA = new Date(a.expire_date).getTime();
-            const dateB = new Date(b.expire_date).getTime();
-            return dateA - dateB;
-        });
-    }
+    if (diff <= 0) return "#b91c1c";
+    if (diff <= 7) return "#dc9326ff";
+    if (diff <= 15) return "#f4f461ff";
+    return "#F3F4F5";
+  }
 }

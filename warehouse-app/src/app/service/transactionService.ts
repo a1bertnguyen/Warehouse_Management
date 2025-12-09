@@ -23,7 +23,7 @@ export class transactionService {
     );
   }
 
-  getTranById(id:number): Observable<any[]>{
+  getTranById(id:string): Observable<any[]>{
     return this.http.get<any>(this.idURL + id).pipe(
         map(res => res.transaction)
     );

@@ -74,7 +74,7 @@
                 </button>
                 <button
                   class="reject"
-                  (click)="returnTran(); updateStatus(t.id, 'CANCELLED')"
+                  (click)="openReturnForm(t.id)"
                 >
                   Reject
                 </button>
@@ -99,11 +99,19 @@
     <form class="modal" [formGroup]="purchaseForm" (ngSubmit)="addPurchase()">
       <h2>Add purchasing transaction</h2>
 
-      <label for="pProduct">Product ID *</label>
-      <input id="pProduct" type="number" formControlName="productId" />
+      <label for="pProduct">Product *</label>
+      <select id="pProduct" formControlName="productId">
+        <option *ngFor="let p of products" [value]="p.id">
+          {{ p.name }}
+        </option>
+      </select>
 
-      <label for="pSupplier">Supplier ID *</label>
-      <input id="pSupplier" type="number" formControlName="supplierId" />
+      <label for="pSupplier">Supplier *</label>
+      <select id="pSupplier" formControlName="supplierId">
+        <option *ngFor="let s of suppliers" [value]="s.id">
+          {{ s.name }}
+        </option>
+      </select>
 
       <label for="pQuantity">Quantity *</label>
       <input id="pQuantity" type="number" formControlName="quantity" />
@@ -127,8 +135,12 @@
     <form class="modal" [formGroup]="sellForm" (ngSubmit)="addSell()">
       <h2>Add selling transaction</h2>
 
-      <label for="sProduct">Product ID *</label>
-      <input id="sProduct" type="number" formControlName="productId" />
+      <label for="sProduct">Product *</label>
+      <select id="sProduct" formControlName="productId">
+        <option *ngFor="let p of products" [value]="p.id">
+          {{ p.name }}
+        </option>
+      </select>
 
       <label for="sQuantity">Quantity *</label>
       <input id="sQuantity" type="number" formControlName="quantity" />
@@ -149,14 +161,22 @@
   </div>
 
   <div class="modal-background" *ngIf="showReturnForm">
-    <form class="modal" [formGroup]="returnForm" (ngSubmit)="returnTran()">
+    <form class="modal" [formGroup]="returnForm" (ngSubmit)="returnTran(selectedTranId)">
       <h2>Return transaction</h2>
 
-      <label for="rProduct">Product ID *</label>
-      <input id="rProduct" type="number" formControlName="productId" />
+      <label for="rProduct">Product *</label>
+      <select id="rProduct" formControlName="productId">
+        <option *ngFor="let p of products" [value]="p.id">
+          {{ p.name }}
+        </option>
+      </select>
 
-      <label for="rSupplier">Supplier ID *</label>
-      <input id="rSupplier" type="number" formControlName="supplierId" />
+      <label for="rSupplier">Supplier *</label>
+      <select id="rSupplier" formControlName="supplierId">
+        <option *ngFor="let s of suppliers" [value]="s.id">
+          {{ s.name }}
+        </option>
+      </select>
 
       <label for="rQuantity">Quantity *</label>
       <input id="rQuantity" type="number" formControlName="quantity" />

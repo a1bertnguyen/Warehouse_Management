@@ -158,7 +158,7 @@ td {
   color: #1e3b8a;
 }
 
-.modal input {
+.modal input, .modal select {
   padding: 8px 10px;
   border: 1px solid #CBD5E1;
   border-radius: 5px;
@@ -167,7 +167,7 @@ td {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.modal input:focus {
+.modal input:focus, .modal select {
   border-color: #1e3b8a;
   box-shadow: 0 0 0 2px rgba(30, 59, 138, 0.2);
 }

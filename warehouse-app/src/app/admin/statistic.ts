@@ -86,7 +86,7 @@ export class Statistic {
     }
 
     getSupplierNumber(){
-        return this.users.length;
+        return this.suppliers.length;
     }
 
     getSellingOrder(){

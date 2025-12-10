@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,16 +53,12 @@ public class ProductServiceImpl implements ProductService {
                 .price(productDTO.getPrice())
                 .stockQuantity(productDTO.getStockQuantity())
                 .description(productDTO.getDescription())
-                .category(category)
                 .expiryDate(productDTO.getExpiryDate())
+                .category(category)
                 .build();
 
         if (imageFile != null && !imageFile.isEmpty()) {
-            log.info("Image file exist");
-//            String imagePath = saveImage(imageFile); //use this when you haven't setup your frontend
-            String imagePath = saveImage2(imageFile); //use this when you ave set up your frontend locally but haven't deployed to produiction
-
-            System.out.println("IMAGE URL IS: " + imagePath);
+            String imagePath = saveImage(imageFile);
             productToSave.setImageUrl(imagePath);
         }
 
@@ -80,12 +78,9 @@ public class ProductServiceImpl implements ProductService {
         Product existingProduct = productRepository.findById(productDTO.getProductId())
                 .orElseThrow(() -> new NotFoundException("Product Not Found"));
 
-        //check if image is associated with the product to update and upload
+        // update image
         if (imageFile != null && !imageFile.isEmpty()) {
-//            String imagePath = saveImage(imageFile); //use this when you haven't setup your frontend
-            String imagePath = saveImage2(imageFile); //use this when you ave set up your frontend locally but haven't deployed to produiction
-
-            System.out.println("IMAGE URL IS: " + imagePath);
+            String imagePath = saveImage(imageFile);
             existingProduct.setImageUrl(imagePath);
         }
 
@@ -131,7 +126,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Response getAllProducts() {
 
-        List<Product> productList = productRepository.findAll(Sort.by(Sort.Direction.ASC, "expiryDate"));
+        List<Product> productList = productRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
 
         List<ProductDTO> productDTOList = modelMapper.map(productList, new TypeToken<List<ProductDTO>>() {
         }.getType());
@@ -189,66 +184,45 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
-    //this save to the root of your project
+
+    // Save image to folder
     private String saveImage(MultipartFile imageFile) {
-        //validate image and check if it is greater than 1GIB
+        // Validate image
         if (!imageFile.getContentType().startsWith("image/") || imageFile.getSize() > 1024 * 1024 * 1024) {
-            throw new IllegalArgumentException("Only image files under 1GIG is allowed");
+            throw new IllegalArgumentException("Only image files under 1GB are allowed");
         }
 
-        //create the directory if it doesn't exist
-        File directory = new File(IMAGE_DIRECTORY);
+        Path currentPath = Paths.get(System.getProperty("user.dir"));
+        if (currentPath.endsWith("backend")) {
+            currentPath = currentPath.getParent();
+        }
 
+        // 3. Construct the full path to frontend/public/products
+        Path imageDir = currentPath.resolve("warehouse-app")
+                           .resolve("src")
+                           .resolve("assets")
+                           .resolve("products");
+
+        // 4. Create the directory if it doesn't exist
+        File directory = imageDir.toFile();
         if (!directory.exists()) {
-            directory.mkdir();
-            log.info("Directory was created");
+            boolean created = directory.mkdirs(); // mkdirs() creates parent folders too if missing
+            if(created) log.info("Directory was created: " + directory.getAbsolutePath());
         }
-        //generate unique file name for the image
+
+        // 5. Generate unique file name
         String uniqueFileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
 
-        //Get the absolute path of the image
-        String imagePath = IMAGE_DIRECTORY + uniqueFileName;
+        // 6. Combine directory path and filename
+        Path destinationPath = imageDir.resolve(uniqueFileName);
 
         try {
-            File destinationFile = new File(imagePath);
-            imageFile.transferTo(destinationFile); //we are writing the image to this folder
+            // Transfer the file
+            imageFile.transferTo(destinationPath.toFile());
         } catch (Exception e) {
             throw new IllegalArgumentException("Error saving Image: " + e.getMessage());
         }
-        return imagePath;
 
+        return "/assets/products/" + uniqueFileName;
     }
-
-    //This saved image to the public folder in your frontend
-    //Use this if your have setup your frontend
-    private String saveImage2(MultipartFile imageFile) {
-        //validate image and check if it is greater than 1GIB
-        if (!imageFile.getContentType().startsWith("image/") || imageFile.getSize() > 1024 * 1024 * 1024) {
-            throw new IllegalArgumentException("Only image files under 1GIG is allowed");
-        }
-
-        //create the directory if it doesn't exist
-        File directory = new File(IMAGE_DIRECTORY_2);
-
-        if (!directory.exists()) {
-            directory.mkdir();
-            log.info("Directory was created");
-        }
-        //generate unique file name for the image
-        String uniqueFileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-
-        //Get the absolute path of the image
-        String imagePath = IMAGE_DIRECTORY_2 + uniqueFileName;
-
-        try {
-            File destinationFile = new File(imagePath);
-            imageFile.transferTo(destinationFile); //we are writing the image to this folder
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Error saving Image: " + e.getMessage());
-        }
-        return "products/"+uniqueFileName;
-
-
-    }
-
 }

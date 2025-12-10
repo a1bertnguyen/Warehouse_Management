@@ -4,6 +4,7 @@ package com.Warehouse_managment.Warehouse_managment.Dtos;
 import com.Warehouse_managment.Warehouse_managment.Enum.UserRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Data;
 
@@ -22,6 +23,7 @@ public class Response {
     private String token;
     private UserRole role;
     private String expirationTime;
+    private Long  userId;
 
     //for pagination
     private Integer totalPages;

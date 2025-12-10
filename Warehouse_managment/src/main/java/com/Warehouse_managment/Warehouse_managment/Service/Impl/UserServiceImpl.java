@@ -14,6 +14,8 @@ import com.Warehouse_managment.Warehouse_managment.Dtos.UserDTO;
 import com.Warehouse_managment.Warehouse_managment.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Sort;
@@ -75,6 +77,7 @@ public class UserServiceImpl implements UserService {
                 .status(200)
                 .message("User Logged in Successfully")
                 .role(user.getRole())
+                .userId(user.getId())
                 .token(token)
                 .expirationTime("6 months")
                 .build();
@@ -137,7 +140,24 @@ public class UserServiceImpl implements UserService {
         if (userDTO.getRole() != null) existingUser.setRole(userDTO.getRole());
 
         if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-            existingUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+            String[] parts = userDTO.getPassword().split(":");
+            if (parts.length != 2) {
+                throw new RuntimeException("Invalid password format");
+            }
+
+            String oldPassword = parts[0];
+            String newPassword = parts[1];
+
+            if (!passwordEncoder.matches(oldPassword, existingUser.getPassword())) {
+                throw new RuntimeException("Current password is incorrect");
+            }
+
+            if (passwordEncoder.matches(newPassword, existingUser.getPassword())) {
+                throw new RuntimeException("New password must not be same as current password");
+            }
+
+            existingUser.setPassword(passwordEncoder.encode(newPassword));
         }
         userRepository.save(existingUser);
 

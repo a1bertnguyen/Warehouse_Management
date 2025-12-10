@@ -42,10 +42,10 @@ export class taskService {
     //manager only
   
   private readonly updateStatusURL = "http://127.0.0.1:8081/api/tasks/";
-  private readonly allTaskURL = "http://localhost:8080/api/tasks/user/";
+  private readonly allTaskURL = "http://localhost:8081/api/tasks/user/";
 
-  updateTaskStatus(id:number, status:string, data:any){
-    return this.http.patch(this.updateStatusURL + id + "/status?status=" + status, data);
+  updateTaskStatus(id:number, data:any){
+    return this.http.patch(this.updateStatusURL + id + "/status?status=" + data, {});
   }
 
   getAllManagerTask(id:number): Observable<any[]> {
@@ -56,10 +56,10 @@ export class taskService {
 
   //feature
   private readonly idURL = "http://127.0.0.1:8081/api/tasks/";
-  private readonly searchURL = "http://localhost:8080/api/tasks/search?input=";
+  private readonly searchURL = "http://localhost:8081/api/tasks/search?input=";
 
-  getTaskById(): Observable<any[]> {
-    return this.http.get<any>(this.idURL).pipe(
+  getTaskById(id:number): Observable<any[]> {
+    return this.http.get<any>(this.idURL + id).pipe(
         map(res => res.task)
     );
   }

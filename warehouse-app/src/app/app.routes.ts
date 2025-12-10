@@ -20,6 +20,9 @@ import { transactionDetail } from './warehouse-manager/transaction-details';
 import { Product } from './warehouse-manager/product';
 import { Inventory } from './warehouse-manager/inventory';
 
+import { TaskComponent } from './admin/task';
+import { TaskDetailsComponent } from './admin/task-details';
+
 const routeConfig: Routes = [
   {
     path: '',
@@ -73,6 +76,10 @@ const routeConfig: Routes = [
     {
       path: 'product',
       component: Product
+    },
+    {
+      path: 'task',
+      component: TaskComponent
     }]
   },
   {
@@ -108,13 +115,23 @@ const routeConfig: Routes = [
     {
       path: 'inventory',
       component: Inventory
+    },
+    {
+      path: 'task',
+      component: TaskComponent
     }]
   },
   {
     path: 'transaction-detail/:id',
     component: transactionDetail,
     canActivate: [() => inject(AuthGuard).canActivate()],
-    canActivateChild: [() => inject(AuthGuard).canActivate()],
+    canActivateChild: [() => inject(AuthGuard).canActivate()]
+  },
+  {
+    path: 'task-details/:id',
+    component: TaskDetailsComponent,
+    canActivate: [() => inject(AuthGuard).canActivate()],
+    canActivateChild: [() => inject(AuthGuard).canActivate()]
   }
 ];
 export default routeConfig;

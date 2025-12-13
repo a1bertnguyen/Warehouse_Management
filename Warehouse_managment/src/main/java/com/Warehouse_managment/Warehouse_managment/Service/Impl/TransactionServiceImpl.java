@@ -1,7 +1,5 @@
 package com.Warehouse_managment.Warehouse_managment.Service.Impl;
 
-
-
 import com.Warehouse_managment.Warehouse_managment.Enum.TransactionStatus;
 import com.Warehouse_managment.Warehouse_managment.Enum.TransactionType;
 import com.Warehouse_managment.Warehouse_managment.Exceptions.NameValueRequiredException;
@@ -53,7 +51,9 @@ public class TransactionServiceImpl implements TransactionService {
         Long supplierId = transactionRequest.getSupplierId();
         Integer quantity = transactionRequest.getQuantity();
 
-        if (supplierId == null) throw new NameValueRequiredException("Supplier Id is Required");
+        if (supplierId == null) {
+            throw new NameValueRequiredException("Supplier Id is Required");
+        }
 
         // this is just for checking
         Product product = productRepository.findById(productId)
@@ -104,7 +104,6 @@ public class TransactionServiceImpl implements TransactionService {
         product.setStockQuantity(product.getStockQuantity() - quantity);
         productRepository.save(product);
 
-
         //create a transaction
         Transaction transaction = Transaction.builder()
                 .transactionType(TransactionType.SALE)
@@ -123,7 +122,6 @@ public class TransactionServiceImpl implements TransactionService {
                 .message("Product Sale successfully made")
                 .build();
 
-
     }
 
     @Override
@@ -133,7 +131,9 @@ public class TransactionServiceImpl implements TransactionService {
         Long supplierId = transactionRequest.getSupplierId();
         Integer quantity = transactionRequest.getQuantity();
 
-        if (supplierId == null) throw new NameValueRequiredException("Supplier Id is Required");
+        if (supplierId == null) {
+            throw new NameValueRequiredException("Supplier Id is Required");
+        }
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product Not Found"));
@@ -146,7 +146,6 @@ public class TransactionServiceImpl implements TransactionService {
         //update the stock quantity and re-save
         product.setStockQuantity(product.getStockQuantity() - quantity);
         productRepository.save(product);
-
 
         //create a transaction
         Transaction transaction = Transaction.builder()
@@ -250,8 +249,6 @@ public class TransactionServiceImpl implements TransactionService {
                 .message("Transaction Status Successfully Updated")
                 .build();
 
-
     }
-
 
 }

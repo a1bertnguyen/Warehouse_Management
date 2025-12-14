@@ -1,5 +1,6 @@
 package com.Warehouse_managment.Warehouse_managment.Service.Impl;
 
+
 import com.Warehouse_managment.Warehouse_managment.Exceptions.NotFoundException;
 import com.Warehouse_managment.Warehouse_managment.Model.Category;
 import com.Warehouse_managment.Warehouse_managment.Model.Product;
@@ -35,8 +36,9 @@ public class ProductServiceImpl implements ProductService {
     private static final String IMAGE_DIRECTORY = System.getProperty("user.dir") + "/product-images/";
 
     //AFTER YOUR FRONTEND IS SETUP CHANGE THE IMAGE DIRECTORY TO YHE FRONTEND YOU ARE USING
-    private static final String IMAGE_DIRECTORY_2
-            = System.getProperty("user.home") + "\\Downloads\\";
+    private static final String IMAGE_DIRECTORY_2 =
+            System.getProperty("user.home") + "\\Downloads\\";
+
 
     @Override
     public Response saveProduct(ProductDTO productDTO, MultipartFile imageFile) {
@@ -118,6 +120,7 @@ public class ProductServiceImpl implements ProductService {
                 .message("Product Updated successfully")
                 .build();
 
+
     }
 
     @Override
@@ -151,34 +154,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Response deleteProduct(Long id) {
 
-        Product product = productRepository.findById(id)
+        productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product Not Found"));
-
-        // Delete the associated image file if exists
-        if (product.getImageUrl() != null && !product.getImageUrl().isBlank()) {
-            Path currentPath = Paths.get(System.getProperty("user.dir"));
-            if (currentPath.endsWith("backend")) {
-                currentPath = currentPath.getParent();
-            }
-
-            Path imagePath = currentPath.resolve("warehouse-app")
-                    .resolve("src")
-                    .resolve("assets")
-                    .resolve("products")
-                    .resolve(product.getImageUrl().substring("/assets/products/".length()));
-
-            try {
-                boolean deleted = java.nio.file.Files.deleteIfExists(imagePath);
-                if (deleted) {
-                    log.info("Successfully deleted image file: " + imagePath);
-                } else {
-                    log.warn("Image file not found or already deleted: " + imagePath);
-                }
-            } catch (Exception e) {
-                log.error("Error deleting image file: " + e.getMessage());
-                // Continue with product deletion even if image deletion fails
-            }
-        }
 
         productRepository.deleteById(id);
 
@@ -207,46 +184,47 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
-    // Save image to folder
+
+    // Save image to frontend folder but serve via Backend URL
     private String saveImage(MultipartFile imageFile) {
-        // Validate image
+        // 1. Validate image
         if (!imageFile.getContentType().startsWith("image/") || imageFile.getSize() > 1024 * 1024 * 1024) {
             throw new IllegalArgumentException("Only image files under 1GB are allowed");
         }
 
+        // 2. Navigate to the frontend folder: .../warehouse-app/src/assets/products
         Path currentPath = Paths.get(System.getProperty("user.dir"));
-        if (currentPath.endsWith("backend")) {
+
+        // If 'warehouse-app' is not in the current dir, go up one level (handles running from backend root)
+        if (!java.nio.file.Files.exists(currentPath.resolve("warehouse-app"))) {
             currentPath = currentPath.getParent();
         }
 
-        // 3. Construct the full path to frontend/public/products
         Path imageDir = currentPath.resolve("warehouse-app")
                 .resolve("src")
                 .resolve("assets")
                 .resolve("products");
 
-        // 4. Create the directory if it doesn't exist
+        // 3. Create the directory if it doesn't exist
         File directory = imageDir.toFile();
         if (!directory.exists()) {
-            boolean created = directory.mkdirs(); // mkdirs() creates parent folders too if missing
-            if (created) {
-                log.info("Directory was created: " + directory.getAbsolutePath());
-            }
+            boolean created = directory.mkdirs();
+            if(created) log.info("Directory was created: " + directory.getAbsolutePath());
         }
 
-        // 5. Generate unique file name
+        // 4. Generate unique file name
         String uniqueFileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-
-        // 6. Combine directory path and filename
         Path destinationPath = imageDir.resolve(uniqueFileName);
 
+        // 5. Save the file
         try {
-            // Transfer the file
             imageFile.transferTo(destinationPath.toFile());
         } catch (Exception e) {
             throw new IllegalArgumentException("Error saving Image: " + e.getMessage());
         }
 
-        return "/assets/products/" + uniqueFileName;
+        // 6. RETURN THE FULL BACKEND URL
+        // This ensures the browser asks Spring Boot (port 8081) for the file, getting it immediately.
+        return "http://localhost:8081/assets/products/" + uniqueFileName;
     }
 }

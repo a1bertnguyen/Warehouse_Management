@@ -194,10 +194,10 @@ export class Product {
     const formData = new FormData();
 
     Object.entries(this.editForm.value).forEach(([key, value]) => {
-        if (value !== null && key !== "expiryDate") {
-          formData.append(key, value.toString());
-        }
-      });
+      if (value !== null && value !== undefined && key !== 'expiryDate') {
+        formData.append(key, String(value));
+      }
+    });
   
       const exp = this.addForm.value.expiryDate + "T00:00:00";
       formData.append("expiryDate", exp);

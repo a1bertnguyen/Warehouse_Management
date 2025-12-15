@@ -80,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
 
         // update image
         if (imageFile != null && !imageFile.isEmpty()) {
+            deleteImage(existingProduct);
             String imagePath = saveImage(imageFile);
             existingProduct.setImageUrl(imagePath);
         }
@@ -154,10 +155,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Response deleteProduct(Long id) {
 
-        productRepository.findById(id)
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product Not Found"));
 
         productRepository.deleteById(id);
+        deleteImage(product);
 
         return Response.builder()
                 .status(200)
@@ -226,5 +228,34 @@ public class ProductServiceImpl implements ProductService {
         // 6. RETURN THE FULL BACKEND URL
         // This ensures the browser asks Spring Boot (port 8081) for the file, getting it immediately.
         return "http://localhost:8081/assets/products/" + uniqueFileName;
+    }
+
+    private boolean deleteImage(Product product){
+        if (product.getImageUrl() != null && !product.getImageUrl().isBlank()) {
+            Path currentPath = Paths.get(System.getProperty("user.dir"));
+            if (currentPath.endsWith("backend")) {
+                currentPath = currentPath.getParent();
+            }
+
+            Path imagePath = currentPath.resolve("warehouse-app")
+                    .resolve("src")
+                    .resolve("assets")
+                    .resolve("products")
+                    .resolve(product.getImageUrl().substring("http://localhost:8081/assets/products/".length()));
+
+            try {
+                boolean deleted = java.nio.file.Files.deleteIfExists(imagePath);
+                if (deleted) {
+                    log.info("Successfully deleted image file: " + imagePath);
+                    return true;
+                } else {
+                    log.warn("Image file not found or already deleted: " + imagePath);
+                }
+            } catch (Exception e) {
+                log.error("Error deleting image file: " + e.getMessage());
+                // Continue with product deletion even if image deletion fails
+            }
+        }
+        return false;
     }
 }

@@ -6,6 +6,7 @@ import { RouterModule } from "@angular/router";
 import { taskService } from "../service/taskService";
 import { productService } from "../service/productService";
 import { userService } from "../service/userService";
+import { Notification } from "../service/notification";
 
 @Component({
   selector: "task",
@@ -33,7 +34,8 @@ export class TaskComponent {
   constructor(
     private taskService: taskService,
     private productService: productService,
-    private userService: userService
+    private userService: userService,
+    private notification: Notification
   ) {}
 
   ngOnInit() {
@@ -125,6 +127,7 @@ export class TaskComponent {
     this.taskService.addTask(this.addTaskForm.value).subscribe({
       next: () => {
         this.message = "Task created successfully";
+        this.notification.notifyRefresh();
         this.loadTasks();
         this.closeAddTaskForm();
       },

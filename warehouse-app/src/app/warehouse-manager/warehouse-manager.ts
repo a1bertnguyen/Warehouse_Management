@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { taskService } from '../service/taskService';
+import { Notification } from '../service/notification';
 
 @Component({
   selector: 'app-warehouse-manager',
@@ -16,10 +17,16 @@ export class WarehouseManager implements OnInit {
   userId: number = Number(localStorage.getItem('userId'));
   hasAssignedTasks: boolean = false;
 
-  constructor(private taskService: taskService) {}
+  constructor(private taskService: taskService,
+              private notification: Notification
+  ) {}
 
   ngOnInit() {
     this.loadTasks();
+
+    this.notification.refresh$.subscribe(() => {
+      this.loadTasks();
+    });
   }
 
   loadTasks() {

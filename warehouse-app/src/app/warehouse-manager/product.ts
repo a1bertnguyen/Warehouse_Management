@@ -186,7 +186,7 @@ export class Product {
   }
 
   updateProduct(id: number) {
-    if (this.editForm.invalid  || !this.selectedFile) {
+    if (this.editForm.invalid) {
       this.error = "All required fields must be filled";
       return;
     }
@@ -198,11 +198,13 @@ export class Product {
         formData.append(key, String(value));
       }
     });
-  
-      const exp = this.addForm.value.expiryDate + "T00:00:00";
-      formData.append("expiryDate", exp);
 
+    const exp = this.editForm.value.expiryDate + "T00:00:00";
+    formData.append("expiryDate", exp);
+
+    if (this.selectedFile) {
       formData.append("imageFile", this.selectedFile);
+    }
 
     this.productService.updateProduct(formData).subscribe({
       next: () => {

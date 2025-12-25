@@ -57,6 +57,9 @@ public class ProductController {
             @RequestParam(value = "stockQuantity", required = false) Integer stockQuantity,
             @RequestParam(value = "categoryId", required = false) Long categoryId,
             @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "expiryDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime expiryDate,
             @RequestParam("productId") Long productId
     ) {
         ProductDTO productDTO = new ProductDTO();
@@ -67,6 +70,7 @@ public class ProductController {
         productDTO.setStockQuantity(stockQuantity);
         productDTO.setCategoryId(categoryId);
         productDTO.setDescription(description);
+        productDTO.setExpiryDate(expiryDate);
 
         return ResponseEntity.ok(productService.updateProduct(productDTO, imageFile));
 

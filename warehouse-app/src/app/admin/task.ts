@@ -47,12 +47,18 @@ export class TaskComponent {
   loadTasks() {
     if (this.role === "ADMIN") {
       this.taskService.getAllAdminTask().subscribe({
-        next: (res) => (this.tasks = res),
+        next: (res) => (
+          this.tasks = res,
+          this.notification.notifyRefresh()
+        ),
         error: () => (this.error = "Failed to load tasks"),
       });
     } else {
       this.taskService.getAllManagerTask(this.userId).subscribe({
-        next: (res) => (this.tasks = res),
+        next: (res) => (
+          this.tasks = res,
+        this.notification.notifyRefresh()
+        ),
         error: () => (this.error = "Failed to load tasks"),
       });
     }
@@ -127,7 +133,6 @@ export class TaskComponent {
     this.taskService.addTask(this.addTaskForm.value).subscribe({
       next: () => {
         this.message = "Task created successfully";
-        this.notification.notifyRefresh();
         this.loadTasks();
         this.closeAddTaskForm();
       },

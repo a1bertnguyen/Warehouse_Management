@@ -112,6 +112,9 @@ public class ProductServiceImpl implements ProductService {
         if (productDTO.getStockQuantity() != null && productDTO.getStockQuantity() >= 0) {
             existingProduct.setStockQuantity(productDTO.getStockQuantity());
         }
+        if (productDTO.getExpiryDate() != null) {
+            existingProduct.setExpiryDate(productDTO.getExpiryDate());
+        }
         //update the product
         productRepository.save(existingProduct);
 
